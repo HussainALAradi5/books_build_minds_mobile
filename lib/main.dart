@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'app/library_app.dart';
-import 'core/config/app_config.dart';
-import 'core/network/api_client.dart';
-import 'features/auth/data/auth_service.dart';
-import 'features/auth/presentation/session_controller.dart';
+import './app/library_app.dart';
+import './shared/config/app_config.dart';
+import './shared/network/api_client.dart';
+import './services/auth/auth_service.dart';
+import './controllers/auth/session_controller.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

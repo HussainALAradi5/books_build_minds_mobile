@@ -1,0 +1,1 @@
+enum AccountMenuAction { profile, signOut }

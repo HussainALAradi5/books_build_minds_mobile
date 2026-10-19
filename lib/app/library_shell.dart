@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../features/admin/presentation/admin_screen.dart';
-import '../features/auth/presentation/auth_screen.dart';
-import '../features/catalog/presentation/catalog_screen.dart';
-import '../features/profile/presentation/member_library_screen.dart';
-import '../features/profile/presentation/profile_screen.dart';
-import '../shared/widgets/brand_mark.dart';
-import 'app_scope.dart';
+import '../screens/admin/admin_screen.dart';
+import '../screens/auth/auth_screen.dart';
+import '../screens/catalog/catalog_screen.dart';
+import '../screens/profile/member_library_screen.dart';
+import '../screens/profile/profile_screen.dart';
+import '../widgets/shared/brand_mark.dart';
+import '../widgets/shared/user_avatar.dart';
+import '../enums/auth/account_menu_action.dart';
+import './app_scope.dart';
 
 class LibraryShell extends StatefulWidget {
   const LibraryShell({super.key, required this.onToggleTheme});
@@ -68,14 +70,31 @@ class _LibraryShellState extends State<LibraryShell> {
                   tooltip: 'Sign in',
                 )
               else
-                Padding(
-                  padding: const EdgeInsets.only(right: 12),
-                  child: CircleAvatar(
-                    radius: 16,
-                    child: Text(
-                      session.user!.userName.isEmpty
-                          ? '?'
-                          : session.user!.userName[0].toUpperCase(),
+                PopupMenuButton<AccountMenuAction>(
+                  tooltip: 'Account options',
+                  onSelected: (action) async {
+                    if (action == AccountMenuAction.profile) {
+                      setState(() => selected = 2);
+                    } else {
+                      await session.signOut();
+                    }
+                  },
+                  itemBuilder: (context) => const [
+                    PopupMenuItem(
+                      value: AccountMenuAction.profile,
+                      child: Text('View profile'),
+                    ),
+                    PopupMenuItem(
+                      value: AccountMenuAction.signOut,
+                      child: Text('Sign out'),
+                    ),
+                  ],
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 14),
+                    child: UserAvatar(
+                      radius: 17,
+                      name: session.user!.userName,
+                      imagePath: session.user!.profilePictureUrl,
                     ),
                   ),
                 ),

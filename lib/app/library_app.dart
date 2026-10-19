@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../core/network/api_client.dart';
-import '../features/auth/presentation/session_controller.dart';
-import 'app_scope.dart';
-import 'library_shell.dart';
-import 'library_theme.dart';
+import '../shared/network/api_client.dart';
+import '../controllers/auth/session_controller.dart';
+import './app_scope.dart';
+import './library_shell.dart';
+import './library_theme.dart';
 
 class LibraryApp extends StatefulWidget {
   const LibraryApp({super.key, required this.api, required this.session});

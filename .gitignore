@@ -32,6 +32,7 @@ migrate_working_dir/
 .tmp/
 .pub/
 /build/
+/android/build/
 /coverage/
 .pub-cache/
 

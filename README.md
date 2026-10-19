@@ -31,7 +31,7 @@ Demo credentials work after `flask --app app seed-demo --test-accounts` in a non
 - **Account:** sign in with username, email, or registered mobile number; register; reset a password with the server's email code; sign out. JWTs are stored in OS-backed secure storage.
 - **Admin:** inventory listing, price edit, and read-only access records. The server remains the authority for every permission and business rule.
 
-The UI is built with Flutter Material 3, reusable widgets, feature folders, typed API models, and controllers. `lib/core` holds shared HTTP/configuration and `lib/shared/widgets` holds common presentation pieces. Features live in `lib/features`.
+The UI is built with Flutter Material 3. `lib` has one parent folder per concern: `apis`, `services`, `dtos`, `interfaces`, `models`, `enums`, `filters`, `middleware`, `widgets`, `screens`, `controllers`, `utils`, and `shared`. Each parent has domain subfolders. `apis` contains endpoint calls, `services` maps them to typed app models, and `dtos` serializes server request bodies. `interfaces/network` defines the transport and middleware contracts. `widgets/shared` holds presentation reused across domains; `shared` holds network and configuration code.
 
 ## Checks
 

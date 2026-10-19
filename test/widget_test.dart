@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:books_build_minds_mobile/core/network/api_client.dart';
-import 'package:books_build_minds_mobile/features/catalog/domain/book.dart';
-import 'package:books_build_minds_mobile/features/catalog/domain/book_condition.dart';
-import 'package:books_build_minds_mobile/features/catalog/presentation/widgets/book_card.dart';
+import 'package:books_build_minds_mobile/shared/network/api_client.dart';
+import 'package:books_build_minds_mobile/models/catalog/book.dart';
+import 'package:books_build_minds_mobile/enums/catalog/book_condition.dart';
+import 'package:books_build_minds_mobile/widgets/catalog/book_card.dart';
 
 void main() {
   testWidgets('book card shows API data, condition, and action', (
