@@ -43,7 +43,7 @@ class BookCover extends StatelessWidget {
   }
 
   Widget _fallback(Color color) => Container(
-    padding: const EdgeInsets.all(18),
+    padding: EdgeInsets.all(height < 200 ? 12 : 18),
     decoration: BoxDecoration(
       gradient: LinearGradient(
         colors: [color, Color.lerp(color, Colors.black, .24)!],
@@ -51,48 +51,65 @@ class BookCover extends StatelessWidget {
         end: Alignment.bottomRight,
       ),
     ),
-    child: Column(
-      children: [
-        const Text(
-          'BOOKS BUILD MINDS',
-          style: TextStyle(
-            color: Colors.white70,
-            fontSize: 10,
-            letterSpacing: 1.7,
-            fontWeight: FontWeight.w700,
+    child: height <= 130
+        ? Center(
+            child: Text(
+              book.title,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontFamily: 'serif',
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: LibraryTheme.cream,
+              ),
+            ),
+          )
+        : Column(
+            children: [
+              const Text(
+                'BOOKS BUILD MINDS',
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 10,
+                  letterSpacing: 1.7,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const Spacer(),
+              Text(
+                book.title,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: 'serif',
+                  fontSize: height < 200 ? 20 : 25,
+                  fontWeight: FontWeight.w600,
+                  color: LibraryTheme.cream,
+                ),
+              ),
+              SizedBox(height: height < 200 ? 5 : 12),
+              Text(
+                book.author.toUpperCase(),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: Colors.white70,
+                  letterSpacing: 1.2,
+                  fontSize: 10,
+                ),
+              ),
+              if (height >= 200) ...[
+                const Spacer(),
+                const Icon(
+                  Icons.auto_stories_outlined,
+                  color: Colors.white54,
+                  size: 28,
+                ),
+              ],
+            ],
           ),
-        ),
-        const Spacer(),
-        Text(
-          book.title,
-          maxLines: 3,
-          overflow: TextOverflow.ellipsis,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontFamily: 'serif',
-            fontSize: 25,
-            fontWeight: FontWeight.w600,
-            color: LibraryTheme.cream,
-          ),
-        ),
-        const SizedBox(height: 12),
-        Text(
-          book.author.toUpperCase(),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-            color: Colors.white70,
-            letterSpacing: 1.2,
-            fontSize: 10,
-          ),
-        ),
-        const Spacer(),
-        const Icon(
-          Icons.auto_stories_outlined,
-          color: Colors.white54,
-          size: 28,
-        ),
-      ],
-    ),
   );
 }

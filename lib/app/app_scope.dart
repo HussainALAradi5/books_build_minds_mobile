@@ -3,13 +3,13 @@ import 'package:flutter/widgets.dart';
 import '../shared/network/api_client.dart';
 import '../controllers/auth/session_controller.dart';
 
-class AppScope extends InheritedWidget {
+class AppScope extends InheritedNotifier<SessionController> {
   const AppScope({
     super.key,
     required this.api,
     required this.session,
     required super.child,
-  });
+  }) : super(notifier: session);
 
   final ApiClient api;
   final SessionController session;
@@ -22,5 +22,5 @@ class AppScope extends InheritedWidget {
 
   @override
   bool updateShouldNotify(AppScope oldWidget) =>
-      api != oldWidget.api || session != oldWidget.session;
+      api != oldWidget.api || super.updateShouldNotify(oldWidget);
 }

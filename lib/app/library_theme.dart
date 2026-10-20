@@ -20,26 +20,30 @@ class LibraryTheme {
       brightness: brightness,
       colorScheme: scheme,
       scaffoldBackgroundColor: scheme.surface,
-      textTheme: Typography.material2021().black.copyWith(
-        headlineLarge: TextStyle(
-          fontFamily: 'serif',
-          fontSize: 38,
-          fontWeight: FontWeight.w600,
-          color: dark ? Colors.white : ink,
-        ),
-        headlineMedium: TextStyle(
-          fontFamily: 'serif',
-          fontSize: 28,
-          fontWeight: FontWeight.w600,
-          color: dark ? Colors.white : ink,
-        ),
-        titleLarge: TextStyle(
-          fontFamily: 'serif',
-          fontSize: 23,
-          fontWeight: FontWeight.w600,
-          color: dark ? Colors.white : ink,
-        ),
-      ),
+      textTheme:
+          (dark
+                  ? Typography.material2021().white
+                  : Typography.material2021().black)
+              .copyWith(
+                headlineLarge: TextStyle(
+                  fontFamily: 'serif',
+                  fontSize: 38,
+                  fontWeight: FontWeight.w600,
+                  color: dark ? Colors.white : ink,
+                ),
+                headlineMedium: TextStyle(
+                  fontFamily: 'serif',
+                  fontSize: 28,
+                  fontWeight: FontWeight.w600,
+                  color: dark ? Colors.white : ink,
+                ),
+                titleLarge: TextStyle(
+                  fontFamily: 'serif',
+                  fontSize: 23,
+                  fontWeight: FontWeight.w600,
+                  color: dark ? Colors.white : ink,
+                ),
+              ),
       appBarTheme: AppBarTheme(
         backgroundColor: scheme.surface,
         scrolledUnderElevation: 0,

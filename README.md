@@ -15,6 +15,20 @@ Mobile companion to the [server](https://github.com/HussainALAradi5/books_build_
 
 `10.0.2.2` points from the Android emulator to the host machine. On a physical device, use the host's reachable LAN address for a debug build, or a trusted HTTPS URL. Release builds require `https://` for `API_BASE_URL`. The Android debug manifest permits local HTTP testing; release does not. Set the API origin without `/api` because the shared client adds API routes.
 
+### HONOR Magic7 Pro
+
+HONOR lists a **1280 × 2800** display and MagicOS 9 based on Android 15 for the [Magic7 Pro](https://www.honor.com/lk/phones/honor-magic7-pro/spec/). The app also has a 3×, approximately 427 dp wide layout preview for that display. Actual display and font scaling can vary in the phone's settings, so installation and interaction still need a device check.
+
+For USB debugging with a local server running on port 5000:
+
+```powershell
+adb devices
+adb reverse tcp:5000 tcp:5000
+flutter run -d <device-id> --dart-define=API_BASE_URL=http://127.0.0.1:5000
+```
+
+`adb reverse` lets the phone reach the computer's local server through USB. Keep the device connected while testing. For a release build, use an HTTPS server URL instead.
+
 | Role | Username | Password | Example access |
 | --- | --- | --- | --- |
 | Administrator | `demo_admin` | `LibraryAdmin2026!` | Inventory prices and access overview |
@@ -32,6 +46,26 @@ Demo credentials work after `flask --app app seed-demo --test-accounts` in a non
 - **Admin:** inventory listing, price edit, and read-only access records. The server remains the authority for every permission and business rule.
 
 The UI is built with Flutter Material 3. `lib` has one parent folder per concern: `apis`, `services`, `dtos`, `interfaces`, `models`, `enums`, `filters`, `middleware`, `widgets`, `screens`, `controllers`, `utils`, and `shared`. Each parent has domain subfolders. `apis` contains endpoint calls, `services` maps them to typed app models, and `dtos` serializes server request bodies. `interfaces/network` defines the transport and middleware contracts. `widgets/shared` holds presentation reused across domains; `shared` holds network and configuration code.
+
+## Mobile screenshots
+
+These Flutter renders show the current mobile UI with deterministic sample API responses. Most use a 390 × 844 viewport; the Magic7 Pro preview uses 1280 × 2800 physical pixels at 3× scaling. They are layout previews, not evidence of a live server session or a device installation. Regenerate them with `flutter test --update-goldens tool/capture_mobile_previews.dart` while `FLUTTER_ROOT` points to the Flutter SDK.
+
+| Catalog · light | Catalog · dark |
+| --- | --- |
+| ![Flutter catalog in light mode](screenshots/mobile/catalog-light.png) | ![Flutter catalog in dark mode](screenshots/mobile/catalog-dark.png) |
+| Catalog · list | Filters · dark |
+| ![Flutter catalog in list mode](screenshots/mobile/catalog-list-light.png) | ![Flutter filters in dark mode](screenshots/mobile/filters-dark.png) |
+| Book detail · light | Book detail · dark |
+| ![Flutter book detail in light mode](screenshots/mobile/book-detail-light.png) | ![Flutter book detail in dark mode](screenshots/mobile/book-detail.png) |
+| Sign in · dark | Magic7 Pro sized catalog preview |
+| ![Flutter sign-in screen in dark mode](screenshots/mobile/sign-in.png) | ![Flutter catalog at Honor Magic7 Pro screen proportions](screenshots/mobile/honor-magic7-pro-catalog.png) |
+| Register · dark | Password recovery · dark |
+| ![Flutter registration screen](screenshots/mobile/register.png) | ![Flutter password recovery request screen](screenshots/mobile/password-reset.png) |
+| Password reset code · dark | Signed-in profile |
+| ![Flutter password reset code screen](screenshots/mobile/password-reset-code.png) | ![Flutter signed-in client profile](screenshots/mobile/profile-signed-in.png) |
+| Active loan | Owned books |
+| ![Flutter active loan screen](screenshots/mobile/loans-signed-in.png) | ![Flutter owned books screen](screenshots/mobile/owned-books.png) |
 
 ## Checks
 
