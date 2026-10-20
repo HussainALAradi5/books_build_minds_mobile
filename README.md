@@ -55,7 +55,7 @@ The UI is built with Flutter Material 3. `lib` has one parent folder per concern
 
 ## Mobile screenshots
 
-These Flutter renders show the current mobile UI with deterministic sample API responses. The layout checks cover 320 × 700, 360 × 780, and 390 × 844 logical pixels; the Magic7 Pro preview uses 1280 × 2800 physical pixels at 3× scaling (about 427 dp wide). They are layout previews, not evidence of a live server session or a device installation. Regenerate them with `flutter test --update-goldens tool/capture_mobile_previews.dart` while `FLUTTER_ROOT` points to the Flutter SDK.
+These Flutter renders show the current mobile UI with deterministic sample API responses. The layout checks cover 320 × 700, 360 × 780, and 390 × 844 logical pixels; the Magic7 Pro preview uses 1280 × 2800 physical pixels at 3× scaling (about 427 dp wide). Transaction and activity records are sample responses; the borrow and checkout previews stop before submission. They are layout previews, not evidence of a live server session or a device installation. Regenerate them with `flutter test --update-goldens tool/capture_mobile_previews.dart` and `flutter test --update-goldens tool/capture_operation_previews.dart` while `FLUTTER_ROOT` points to the Flutter SDK.
 
 | Catalog · light | Catalog · dark |
 | --- | --- |
@@ -82,6 +82,14 @@ These Flutter renders show the current mobile UI with deterministic sample API r
 | ![Flutter password recovery screen in light mode](screenshots/mobile/password-reset-light.png) | ![Flutter signed-in client profile in dark mode](screenshots/mobile/profile-signed-in-dark.png) |
 | Active loan · dark | |
 | ![Flutter active loan screen in dark mode](screenshots/mobile/loans-signed-in-dark.png) | |
+| Transactions · light | Transactions · dark |
+| ![Sample purchase and rental transactions in light mode](screenshots/mobile/transactions-light.png) | ![Sample purchase and rental transactions in dark mode](screenshots/mobile/transactions-dark.png) |
+| Library activity | Borrow · terms |
+| ![Sample library activity](screenshots/mobile/activity-light.png) | ![First step of borrowing a book](screenshots/mobile/borrow-terms-light.png) |
+| Borrow · review | Borrow · confirmation |
+| ![Borrow period and availability review](screenshots/mobile/borrow-review-light.png) | ![Final borrow confirmation step](screenshots/mobile/borrow-confirm-light.png) |
+| Purchase checkout | Rental checkout |
+| ![Purchase checkout preview before submission](screenshots/mobile/purchase-checkout-light.png) | ![Rental checkout preview before submission](screenshots/mobile/rental-checkout-light.png) |
 
 ## Checks
 

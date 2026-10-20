@@ -88,8 +88,57 @@ class PreviewApiClient extends ApiClient {
     if (path == '/profile/1/books') {
       return _page([_book('sapiens', 1, 'Sapiens', 'Yuval Noah Harari', 10.2)]);
     }
-    if (path == '/profile/1/activities' || path == '/transactions') {
-      return _page([]);
+    if (path == '/profile/1/activities') {
+      return _page([
+        {
+          'book_title': 'Sapiens',
+          'action_type': 'borrowed',
+          'occurred_at': '2026-10-18T12:00:00Z',
+        },
+        {
+          'book_title': 'Deep Work',
+          'action_type': 'purchased',
+          'occurred_at': '2026-10-15T12:00:00Z',
+        },
+      ]);
+    }
+    if (path == '/transactions') {
+      return _page([
+        {
+          'transaction_id': 'preview-purchase-1',
+          'book_title': 'Deep Work',
+          'kind': 'purchase',
+          'status': 'completed',
+          'amount_minor': 6800,
+          'currency_scale': 1000,
+        },
+        {
+          'transaction_id': 'preview-rental-1',
+          'book_title': 'Educated',
+          'kind': 'rental',
+          'status': 'pending',
+          'amount_minor': 1500,
+          'currency_scale': 1000,
+        },
+      ]);
+    }
+    if (path == '/book/sapiens/quote') {
+      return {
+        'available_copies': 3,
+        'borrow_days': 14,
+        'rental_days': 7,
+        'purchase_amount_minor': 10200,
+        'rental_amount_minor': 2000,
+        'currency_scale': 1000,
+        'policy_version': 'preview-v1',
+        'terms': [
+          'Follow the current library policy for this book.',
+          'Stock and price are checked again when you confirm.',
+        ],
+      };
+    }
+    if (path == '/book/sapiens/loan') {
+      return {'loan': null};
     }
     throw StateError('No preview response for $path');
   }

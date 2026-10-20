@@ -1,6 +1,3 @@
-import 'dart:io';
-import 'dart:ui' as ui;
-
 import 'package:books_build_minds_mobile/app/library_app.dart';
 import 'package:books_build_minds_mobile/services/auth/auth_service.dart';
 import 'package:books_build_minds_mobile/widgets/catalog/book_card.dart';
@@ -8,35 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'preview_fixtures.dart';
+import 'preview_fonts.dart';
 
 // Run: flutter test --update-goldens tool/capture_mobile_previews.dart
 // These are rendered app previews with deterministic sample API responses.
 void main() {
   testWidgets('capture mobile catalog and detail previews', (tester) async {
-    final fontRoot = Platform.environment['FLUTTER_ROOT'];
-    if (fontRoot == null) {
-      throw StateError('Set FLUTTER_ROOT before capturing previews.');
-    }
-    final regular = File(
-      '$fontRoot/bin/cache/artifacts/material_fonts/roboto-regular.ttf',
-    );
-    final bold = File(
-      '$fontRoot/bin/cache/artifacts/material_fonts/roboto-bold.ttf',
-    );
-    final icons = File(
-      '$fontRoot/bin/cache/artifacts/material_fonts/materialicons-regular.otf',
-    );
-    await tester.runAsync(() async {
-      await ui.loadFontFromList(
-        await regular.readAsBytes(),
-        fontFamily: 'Roboto',
-      );
-      await ui.loadFontFromList(await bold.readAsBytes(), fontFamily: 'serif');
-      await ui.loadFontFromList(
-        await icons.readAsBytes(),
-        fontFamily: 'MaterialIcons',
-      );
-    });
+    await loadPreviewFonts(tester);
     tester.view.physicalSize = const Size(390, 844);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
