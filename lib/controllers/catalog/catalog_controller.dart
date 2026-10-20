@@ -42,9 +42,14 @@ class CatalogController extends ChangeNotifier {
   void search(String query) {
     _searchTimer?.cancel();
     _searchTimer = Timer(const Duration(milliseconds: 350), () {
-      filter = filter.copyWith(query: query, page: 1);
-      load();
+      submitSearch(query);
     });
+  }
+
+  void submitSearch(String query) {
+    _searchTimer?.cancel();
+    filter = filter.copyWith(query: query, page: 1);
+    load();
   }
 
   void apply(BookFilter value) {

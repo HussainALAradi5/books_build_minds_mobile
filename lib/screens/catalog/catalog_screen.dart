@@ -75,10 +75,26 @@ class _CatalogScreenState extends State<CatalogScreen> {
                     TextField(
                       controller: search,
                       onChanged: state.search,
+                      onSubmitted: state.submitSearch,
+                      onTapOutside: (_) => FocusScope.of(context).unfocus(),
                       textInputAction: TextInputAction.search,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         hintText: 'Title, author, publisher or ISBN',
-                        prefixIcon: Icon(Icons.search_rounded),
+                        prefixIcon: const Icon(Icons.search_rounded),
+                        suffixIcon: ValueListenableBuilder<TextEditingValue>(
+                          valueListenable: search,
+                          builder: (context, value, _) => value.text.isEmpty
+                              ? const SizedBox.shrink()
+                              : IconButton(
+                                  tooltip: 'Clear search',
+                                  onPressed: () {
+                                    search.clear();
+                                    state.submitSearch('');
+                                    FocusScope.of(context).unfocus();
+                                  },
+                                  icon: const Icon(Icons.close_rounded),
+                                ),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 13),

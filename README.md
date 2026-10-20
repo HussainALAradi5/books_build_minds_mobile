@@ -45,11 +45,17 @@ Demo credentials work after `flask --app app seed-demo --test-accounts` in a non
 - **Account:** sign in with username, email, or registered mobile number; register; reset a password with the server's email code; sign out. JWTs are stored in OS-backed secure storage.
 - **Admin:** inventory listing, price edit, and read-only access records. The server remains the authority for every permission and business rule.
 
+### Switch light and dark mode
+
+The app starts with your phone's light or dark setting. On the Explore, Library, or Account screen, tap the moon icon in the top right to switch to dark mode, or the sun icon to switch to light mode. The icon's tooltip names the action. If you are on a sign-in, registration, password reset, or book detail screen, go back to the main screen to reach the theme button. The manual choice lasts while the app is open; a fresh launch follows the phone setting again.
+
+For quicker catalog use, submit a search from the keyboard, tap the clear icon inside the search field, and tap outside the field to dismiss the keyboard. Filters open as a bottom sheet, and the list/grid button changes the book layout.
+
 The UI is built with Flutter Material 3. `lib` has one parent folder per concern: `apis`, `services`, `dtos`, `interfaces`, `models`, `enums`, `filters`, `middleware`, `widgets`, `screens`, `controllers`, `utils`, and `shared`. Each parent has domain subfolders. `apis` contains endpoint calls, `services` maps them to typed app models, and `dtos` serializes server request bodies. `interfaces/network` defines the transport and middleware contracts. `widgets/shared` holds presentation reused across domains; `shared` holds network and configuration code.
 
 ## Mobile screenshots
 
-These Flutter renders show the current mobile UI with deterministic sample API responses. Most use a 390 × 844 viewport; the Magic7 Pro preview uses 1280 × 2800 physical pixels at 3× scaling. They are layout previews, not evidence of a live server session or a device installation. Regenerate them with `flutter test --update-goldens tool/capture_mobile_previews.dart` while `FLUTTER_ROOT` points to the Flutter SDK.
+These Flutter renders show the current mobile UI with deterministic sample API responses. The layout checks cover 320 × 700, 360 × 780, and 390 × 844 logical pixels; the Magic7 Pro preview uses 1280 × 2800 physical pixels at 3× scaling (about 427 dp wide). They are layout previews, not evidence of a live server session or a device installation. Regenerate them with `flutter test --update-goldens tool/capture_mobile_previews.dart` while `FLUTTER_ROOT` points to the Flutter SDK.
 
 | Catalog · light | Catalog · dark |
 | --- | --- |
@@ -66,6 +72,16 @@ These Flutter renders show the current mobile UI with deterministic sample API r
 | ![Flutter password reset code screen](screenshots/mobile/password-reset-code.png) | ![Flutter signed-in client profile](screenshots/mobile/profile-signed-in.png) |
 | Active loan | Owned books |
 | ![Flutter active loan screen](screenshots/mobile/loans-signed-in.png) | ![Flutter owned books screen](screenshots/mobile/owned-books.png) |
+| Small Android width · light | Standard Android width · light |
+| ![Flutter catalog at 320 dp wide](screenshots/mobile/catalog-small-android.png) | ![Flutter catalog at 360 dp wide](screenshots/mobile/catalog-standard-android.png) |
+| Filters · light | Magic7 Pro proportions · dark |
+| ![Flutter filters in light mode](screenshots/mobile/filters-light.png) | ![Flutter catalog in dark mode at Magic7 Pro screen proportions](screenshots/mobile/honor-magic7-pro-dark.png) |
+| Sign in · light | Register · light |
+| ![Flutter sign-in screen in light mode](screenshots/mobile/sign-in-light.png) | ![Flutter registration screen in light mode](screenshots/mobile/register-light.png) |
+| Password recovery · light | Signed-in profile · dark |
+| ![Flutter password recovery screen in light mode](screenshots/mobile/password-reset-light.png) | ![Flutter signed-in client profile in dark mode](screenshots/mobile/profile-signed-in-dark.png) |
+| Active loan · dark | |
+| ![Flutter active loan screen in dark mode](screenshots/mobile/loans-signed-in-dark.png) | |
 
 ## Checks
 

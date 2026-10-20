@@ -39,22 +39,24 @@ class BookCard extends StatelessWidget {
     children: [
       BookCover(book: book, api: api, height: 168),
       const SizedBox(height: 12),
-      Row(
-        children: [
-          if (book.condition != null)
-            Flexible(
-              child: StatusBadge(
+      LayoutBuilder(
+        builder: (context, constraints) => Row(
+          children: [
+            if (book.condition != null)
+              StatusBadge(
                 label: book.condition!.label,
                 color: book.condition!.color,
               ),
-            ),
-          const Spacer(),
-          Icon(Icons.star_rounded, color: Colors.orange.shade700, size: 15),
-          Text(
-            book.averageRating.toStringAsFixed(1),
-            style: Theme.of(context).textTheme.labelSmall,
-          ),
-        ],
+            if (constraints.maxWidth >= 150) ...[
+              const Spacer(),
+              Icon(Icons.star_rounded, color: Colors.orange.shade700, size: 15),
+              Text(
+                book.averageRating.toStringAsFixed(1),
+                style: Theme.of(context).textTheme.labelSmall,
+              ),
+            ],
+          ],
+        ),
       ),
       const SizedBox(height: 9),
       Text(

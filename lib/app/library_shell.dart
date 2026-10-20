@@ -29,6 +29,7 @@ class _LibraryShellState extends State<LibraryShell> {
       listenable: session,
       builder: (context, _) {
         final admin = session.user?.isAdmin ?? false;
+        final isDark = Theme.of(context).brightness == Brightness.dark;
         final tabs = <Widget>[
           const CatalogScreen(),
           const MemberLibraryScreen(),
@@ -44,12 +45,16 @@ class _LibraryShellState extends State<LibraryShell> {
               children: [
                 BrandMark(size: 35),
                 SizedBox(width: 10),
-                Text(
-                  'BOOKS BUILD MINDS',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: .6,
-                    fontSize: 14,
+                Flexible(
+                  child: Text(
+                    'BOOKS BUILD MINDS',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: .6,
+                      fontSize: 13,
+                    ),
                   ),
                 ),
               ],
@@ -57,8 +62,12 @@ class _LibraryShellState extends State<LibraryShell> {
             actions: [
               IconButton(
                 onPressed: widget.onToggleTheme,
-                icon: const Icon(Icons.brightness_6_outlined),
-                tooltip: 'Switch color theme',
+                icon: Icon(
+                  isDark ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
+                ),
+                tooltip: isDark
+                    ? 'Switch to light mode'
+                    : 'Switch to dark mode',
               ),
               if (session.user == null)
                 IconButton(

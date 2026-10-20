@@ -19,6 +19,17 @@ class LibraryApp extends StatefulWidget {
 class _LibraryAppState extends State<LibraryApp> {
   ThemeMode mode = ThemeMode.system;
 
+  void toggleTheme() {
+    final brightness = mode == ThemeMode.system
+        ? WidgetsBinding.instance.platformDispatcher.platformBrightness
+        : mode == ThemeMode.dark
+        ? Brightness.dark
+        : Brightness.light;
+    setState(() {
+      mode = brightness == Brightness.dark ? ThemeMode.light : ThemeMode.dark;
+    });
+  }
+
   @override
   Widget build(BuildContext context) => AppScope(
     api: widget.api,
@@ -29,11 +40,7 @@ class _LibraryAppState extends State<LibraryApp> {
       theme: LibraryTheme.build(Brightness.light),
       darkTheme: LibraryTheme.build(Brightness.dark),
       themeMode: mode,
-      home: LibraryShell(
-        onToggleTheme: () => setState(() {
-          mode = mode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
-        }),
-      ),
+      home: LibraryShell(onToggleTheme: toggleTheme),
     ),
   );
 }
