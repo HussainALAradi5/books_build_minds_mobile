@@ -1,0 +1,4 @@
+storeFile=app/release-key.jks
+storePassword=replace-with-local-secret
+keyAlias=booksbuildminds
+keyPassword=replace-with-local-secret

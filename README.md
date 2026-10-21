@@ -15,6 +15,18 @@ Mobile companion to the [server](https://github.com/HussainALAradi5/books_build_
 
 `10.0.2.2` points from the Android emulator to the host machine. On a physical device, use the host's reachable LAN address for a debug build, or a trusted HTTPS URL. Release builds require `https://` for `API_BASE_URL`. The Android debug manifest permits local HTTP testing; release does not. Set the API origin without `/api` because the shared client adds API routes.
 
+### Android release signing
+
+The Android application ID is `com.booksbuildminds.mobile`. Debug builds use the Android debug key. Release builds never use that key. To make an installable release, create your own keystore, copy `android/key.properties.example` to `android/key.properties`, and replace all example values with the local keystore path and credentials. Both the properties file and keystore files in `android/app` are ignored by Git. Back up the keystore securely; future updates must use the same key.
+
+Build the signed app bundle with an HTTPS API origin:
+
+```powershell
+flutter build appbundle --release --dart-define=API_BASE_URL=https://your-api.example
+```
+
+Check the app ID and signing key against your store account before its first upload. The debug APK in `build/app/outputs/flutter-apk` is for local testing only.
+
 ### HONOR Magic7 Pro
 
 HONOR lists a **1280 × 2800** display and MagicOS 9 based on Android 15 for the [Magic7 Pro](https://www.honor.com/lk/phones/honor-magic7-pro/spec/). The app also has a 3×, approximately 427 dp wide layout preview for that display. Actual display and font scaling can vary in the phone's settings, so installation and interaction still need a device check.
