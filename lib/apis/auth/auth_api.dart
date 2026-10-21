@@ -17,13 +17,19 @@ class AuthApi {
         authenticated: false,
       );
 
-  Future<void> register(String userName, String email, String password) async {
+  Future<void> register(
+    String userName,
+    String email,
+    String password,
+    String mobileNumber,
+  ) async {
     await client.post(
       '/register',
       body: RegisterRequest(
         userName: userName,
         email: email,
         password: password,
+        mobileNumber: mobileNumber,
       ).toJson(),
       authenticated: false,
     );

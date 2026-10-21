@@ -20,6 +20,7 @@ class _AuthScreenState extends State<AuthScreen> {
   final identifier = TextEditingController();
   final userName = TextEditingController();
   final email = TextEditingController();
+  final mobileNumber = TextEditingController();
   final password = TextEditingController();
   final code = TextEditingController();
   bool codeSent = false;
@@ -29,7 +30,14 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   void dispose() {
-    for (final controller in [identifier, userName, email, password, code]) {
+    for (final controller in [
+      identifier,
+      userName,
+      email,
+      mobileNumber,
+      password,
+      code,
+    ]) {
       controller.dispose();
     }
     super.dispose();
@@ -89,6 +97,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       identifier: identifier,
                       userName: userName,
                       email: email,
+                      mobileNumber: mobileNumber,
                       password: password,
                       code: code,
                     ),
@@ -178,6 +187,7 @@ class _AuthScreenState extends State<AuthScreen> {
             userName.text.trim(),
             email.text.trim(),
             password.text,
+            mobileNumber.text.trim(),
           );
           if (mounted) {
             select(AuthMode.signIn);

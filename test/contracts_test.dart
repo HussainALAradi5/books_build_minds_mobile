@@ -12,6 +12,8 @@ import 'package:books_build_minds_mobile/enums/loans/loan_status.dart';
 import 'package:books_build_minds_mobile/filters/catalog/book_filter.dart';
 import 'package:books_build_minds_mobile/middleware/network/auth_header_middleware.dart';
 import 'package:books_build_minds_mobile/dtos/auth/login_request.dart';
+import 'package:books_build_minds_mobile/dtos/auth/register_request.dart';
+import 'package:books_build_minds_mobile/utils/auth/mobile_number.dart';
 import 'package:books_build_minds_mobile/shared/network/api_failure.dart';
 
 void main() {
@@ -142,4 +144,24 @@ void main() {
       });
     },
   );
+
+  test('registration sends an optional normalized mobile number', () {
+    const request = RegisterRequest(
+      userName: 'reader',
+      email: 'reader@example.test',
+      password: 'Reader123',
+      mobileNumber: '+973 1234 5678',
+    );
+    expect(request.toJson()['mobile_number'], '+97312345678');
+    expect(optionalMobileError('+973 1234 5678'), isNull);
+    expect(optionalMobileError('1234'), isNotNull);
+    expect(
+      const RegisterRequest(
+        userName: 'reader',
+        email: 'reader@example.test',
+        password: 'Reader123',
+      ).toJson()['mobile_number'],
+      isNull,
+    );
+  });
 }

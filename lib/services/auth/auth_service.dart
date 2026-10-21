@@ -16,8 +16,13 @@ class AuthService {
   Future<LoginResult> login(String identifier, String password) async =>
       LoginResult.fromJson(await _authApi.login(identifier, password));
 
-  Future<void> register(String userName, String email, String password) async {
-    await _authApi.register(userName, email, password);
+  Future<void> register(
+    String userName,
+    String email,
+    String password,
+    String mobileNumber,
+  ) async {
+    await _authApi.register(userName, email, password, mobileNumber);
   }
 
   Future<void> requestReset(String identifier) async {

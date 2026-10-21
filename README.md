@@ -42,7 +42,7 @@ Demo credentials work after `flask --app app seed-demo --test-accounts` in a non
 - **Explore:** searchable, filtered, paginated grid or list from the server; condition colors and book detail.
 - **Book detail:** description, stock, creator information, printable PDF, three-step borrow flow, rent and purchase checkout, and purchase-gated reviews. Checkout uses the server's sandbox flow; the app verifies the resulting transaction through the API.
 - **Library:** loans, owned books, transactions, and activity in separate tabs.
-- **Account:** sign in with username, email, or registered mobile number; register; reset a password with the server's email code; sign out. JWTs are stored in OS-backed secure storage.
+- **Account:** sign in with username, email, or registered mobile number; register with an optional international mobile number; reset a password with the server's email code; sign out. JWTs are stored in OS-backed secure storage.
 - **Admin:** inventory listing, price edit, and read-only access records. The server remains the authority for every permission and business rule.
 
 ### Switch light and dark mode

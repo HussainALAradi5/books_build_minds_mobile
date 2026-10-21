@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../enums/auth/auth_mode.dart';
+import '../../utils/auth/mobile_number.dart';
 
 class AuthFields extends StatefulWidget {
   const AuthFields({
@@ -10,6 +11,7 @@ class AuthFields extends StatefulWidget {
     required this.identifier,
     required this.userName,
     required this.email,
+    required this.mobileNumber,
     required this.password,
     required this.code,
   });
@@ -19,6 +21,7 @@ class AuthFields extends StatefulWidget {
   final TextEditingController identifier;
   final TextEditingController userName;
   final TextEditingController email;
+  final TextEditingController mobileNumber;
   final TextEditingController password;
   final TextEditingController code;
 
@@ -53,6 +56,17 @@ class _AuthFieldsState extends State<AuthFields> {
             prefixIcon: Icon(Icons.alternate_email_rounded),
           ),
           validator: _required,
+        ),
+        const SizedBox(height: 13),
+        TextFormField(
+          controller: widget.mobileNumber,
+          keyboardType: TextInputType.phone,
+          decoration: const InputDecoration(
+            labelText: 'Mobile number (optional)',
+            hintText: '+97312345678',
+            prefixIcon: Icon(Icons.phone_outlined),
+          ),
+          validator: optionalMobileError,
         ),
         const SizedBox(height: 13),
       ] else ...[

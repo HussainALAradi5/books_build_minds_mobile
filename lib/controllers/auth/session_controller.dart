@@ -73,8 +73,12 @@ class SessionController extends ChangeNotifier {
     }
   }
 
-  Future<void> register(String userName, String email, String password) =>
-      _auth.register(userName, email, password);
+  Future<void> register(
+    String userName,
+    String email,
+    String password,
+    String mobileNumber,
+  ) => _auth.register(userName, email, password, mobileNumber);
 
   Future<void> requestReset(String identifier) =>
       _auth.requestReset(identifier);
