@@ -43,7 +43,7 @@ class MemberLibraryScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
+            padding: const EdgeInsets.fromLTRB(20, 8, 20, 4),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -56,10 +56,10 @@ class MemberLibraryScreen extends StatelessWidget {
                     fontWeight: FontWeight.w800,
                   ),
                 ),
-                const SizedBox(height: 7),
+                const SizedBox(height: 4),
                 Text(
                   'Your library',
-                  style: Theme.of(context).textTheme.headlineLarge,
+                  style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 const Text('Every story, kept close.'),
               ],
@@ -69,13 +69,46 @@ class MemberLibraryScreen extends StatelessWidget {
             isScrollable: true,
             tabAlignment: TabAlignment.start,
             tabs: [
-              Tab(icon: Icon(Icons.assignment_outlined), text: 'Loans'),
-              Tab(icon: Icon(Icons.bookmark_outline_rounded), text: 'Owned'),
               Tab(
-                icon: Icon(Icons.receipt_long_outlined),
-                text: 'Transactions',
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.assignment_outlined, size: 18),
+                    SizedBox(width: 6),
+                    Text('Loans'),
+                  ],
+                ),
               ),
-              Tab(icon: Icon(Icons.history_rounded), text: 'Activity'),
+              Tab(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.bookmark_outline_rounded, size: 18),
+                    SizedBox(width: 6),
+                    Text('Owned'),
+                  ],
+                ),
+              ),
+              Tab(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.receipt_long_outlined, size: 18),
+                    SizedBox(width: 6),
+                    Text('Transactions'),
+                  ],
+                ),
+              ),
+              Tab(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.history_rounded, size: 18),
+                    SizedBox(width: 6),
+                    Text('Activity'),
+                  ],
+                ),
+              ),
             ],
           ),
           Expanded(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../shared/numeric_form_field.dart';
+
 class PriceRangeFields extends StatelessWidget {
   const PriceRangeFields({
     super.key,
@@ -21,28 +23,22 @@ class PriceRangeFields extends StatelessWidget {
       Row(
         children: [
           Expanded(
-            child: TextField(
+            child: NumericFormField(
               controller: minPrice,
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
-              ),
-              decoration: const InputDecoration(
-                labelText: 'Minimum',
-                prefixText: 'BHD ',
-              ),
+              label: 'Minimum',
+              requiredValue: false,
+              minimum: .001,
+              prefixText: 'BHD ',
             ),
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: TextField(
+            child: NumericFormField(
               controller: maxPrice,
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
-              ),
-              decoration: const InputDecoration(
-                labelText: 'Maximum',
-                prefixText: 'BHD ',
-              ),
+              label: 'Maximum',
+              requiredValue: false,
+              minimum: .001,
+              prefixText: 'BHD ',
             ),
           ),
         ],

@@ -27,7 +27,7 @@ class AdminScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+            padding: const EdgeInsets.fromLTRB(20, 8, 20, 4),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -43,16 +43,43 @@ class AdminScreen extends StatelessWidget {
                 const SizedBox(height: 6),
                 Text(
                   'Admin studio',
-                  style: Theme.of(context).textTheme.headlineLarge,
+                  style: Theme.of(context).textTheme.headlineMedium,
                 ),
               ],
             ),
           ),
           const TabBar(
             tabs: [
-              Tab(icon: Icon(Icons.inventory_2_outlined), text: 'Inventory'),
-              Tab(icon: Icon(Icons.add_circle_outline), text: 'Catalog'),
-              Tab(icon: Icon(Icons.shield_outlined), text: 'Access'),
+              Tab(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.inventory_2_outlined, size: 18),
+                    SizedBox(width: 6),
+                    Text('Inventory'),
+                  ],
+                ),
+              ),
+              Tab(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.add_circle_outline, size: 18),
+                    SizedBox(width: 6),
+                    Text('Catalog'),
+                  ],
+                ),
+              ),
+              Tab(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.shield_outlined, size: 18),
+                    SizedBox(width: 6),
+                    Text('Access'),
+                  ],
+                ),
+              ),
             ],
           ),
           Expanded(

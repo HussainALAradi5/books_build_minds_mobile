@@ -6,6 +6,7 @@ import '../../services/admin/admin_service.dart';
 import '../../app/app_scope.dart';
 import '../../services/media/media_service.dart';
 import '../shared/image_picker_button.dart';
+import 'price_editor_dialog.dart';
 
 class InventoryTile extends StatelessWidget {
   const InventoryTile({
@@ -14,12 +15,16 @@ class InventoryTile extends StatelessWidget {
     required this.service,
     required this.refresh,
     required this.canEdit,
+    this.selected,
+    this.onSelected,
   });
 
   final Book book;
   final AdminService service;
   final VoidCallback refresh;
   final bool canEdit;
+  final bool? selected;
+  final ValueChanged<bool>? onSelected;
 
   @override
   Widget build(BuildContext context) => Card(
@@ -38,6 +43,12 @@ class InventoryTile extends StatelessWidget {
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
+              if (onSelected != null)
+                Checkbox(
+                  value: selected ?? false,
+                  onChanged: (value) => onSelected!(value ?? false),
+                  semanticLabel: 'Select ${book.title}',
+                ),
             ],
           ),
           if (AppScope.of(context).session.user?.permissions
@@ -81,39 +92,10 @@ class InventoryTile extends StatelessWidget {
   );
 
   Future<void> _editPrice(BuildContext context) async {
-    final input = TextEditingController(text: book.price.toStringAsFixed(3));
     final price = await showDialog<double>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Edit book price'),
-        content: SizedBox(
-          width: 290,
-          child: TextField(
-            controller: input,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            decoration: const InputDecoration(
-              labelText: 'New price in BHD',
-              prefixIcon: Icon(Icons.payments_outlined),
-            ),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          FilledButton(
-            onPressed: () {
-              final value = double.tryParse(input.text.trim());
-              if (value == null || value <= 0) return;
-              Navigator.pop(context, value);
-            },
-            child: const Text('Save price'),
-          ),
-        ],
-      ),
+      builder: (context) => PriceEditorDialog(currentPrice: book.price),
     );
-    input.dispose();
     if (price == null) return;
     try {
       await service.updatePrice(book.slug, price);

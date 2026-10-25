@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import '../../dtos/admin/create_book_request.dart';
 import '../../enums/catalog/book_condition.dart';
 import '../../services/admin/admin_service.dart';
+import '../shared/responsive_form_dialog.dart';
+import '../shared/responsive_field_row.dart';
+import '../shared/numeric_form_field.dart';
+import '../shared/status_badge.dart';
 
 class BookCreateDialog extends StatefulWidget {
   const BookCreateDialog({super.key, required this.service});
@@ -44,75 +48,86 @@ class _BookCreateDialogState extends State<BookCreateDialog> {
   }
 
   @override
-  Widget build(BuildContext context) => AlertDialog(
-    title: const Text('Add a book'),
+  Widget build(BuildContext context) => ResponsiveFormDialog(
+    title: 'Add a book',
+    busy: busy,
     content: SizedBox(
       width: 420,
       child: Form(
         key: form,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _field(title, 'Title'),
-              _field(description, 'Description', lines: 3),
-              _field(author, 'Author'),
-              _field(publisher, 'Publisher'),
-              _field(isbn, 'ISBN'),
-              TextFormField(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _field(title, 'Title'),
+            const SizedBox(height: 12),
+            _field(description, 'Description', lines: 3),
+            const SizedBox(height: 12),
+            ResponsiveFieldRow(
+              first: _field(author, 'Author'),
+              second: _field(publisher, 'Publisher'),
+            ),
+            const SizedBox(height: 12),
+            _field(isbn, 'ISBN'),
+            const SizedBox(height: 12),
+            ResponsiveFieldRow(
+              first: TextFormField(
                 controller: published,
                 readOnly: true,
                 validator: _required,
                 onTap: _chooseDate,
                 decoration: const InputDecoration(
-                  labelText: 'Publication date',
-                  suffixIcon: Icon(Icons.calendar_today_outlined),
+                  labelText: 'Published',
+                  isDense: true,
+                  suffixIcon: Icon(Icons.calendar_today_outlined, size: 18),
+                  suffixIconConstraints: BoxConstraints(minWidth: 28),
                 ),
               ),
-              TextFormField(
+              second: NumericFormField(
                 controller: price,
-                keyboardType: const TextInputType.numberWithOptions(
-                  decimal: true,
-                ),
-                validator: (value) => (double.tryParse(value ?? '') ?? 0) > 0
-                    ? null
-                    : 'Enter a positive price',
-                decoration: const InputDecoration(labelText: 'Price in BHD'),
+                label: 'Price · BHD',
+                minimum: .001,
+                errorText: 'Enter a positive price',
               ),
-              TextFormField(
+            ),
+            const SizedBox(height: 12),
+            ResponsiveFieldRow(
+              minimumWidth: 250,
+              first: NumericFormField(
                 controller: copies,
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  final count = int.tryParse(value ?? '');
-                  return count != null && count >= 1 && count <= 1000
-                      ? null
-                      : 'Enter 1 to 1000 copies';
-                },
-                decoration: const InputDecoration(labelText: 'Copies'),
+                label: 'Copies',
+                integer: true,
+                minimum: 1,
+                maximum: 1000,
+                errorText: 'Enter 1 to 1000 copies',
               ),
-              DropdownButtonFormField<BookCondition>(
+              second: DropdownButtonFormField<BookCondition>(
                 initialValue: condition,
-                decoration: const InputDecoration(labelText: 'Condition'),
+                isExpanded: true,
+                decoration: const InputDecoration(
+                  labelText: 'Condition',
+                  isDense: true,
+                ),
                 items: [
                   for (final item in BookCondition.values)
-                    DropdownMenuItem(value: item, child: Text(item.label)),
+                    DropdownMenuItem(
+                      value: item,
+                      child: StatusBadge(label: item.label, color: item.color),
+                    ),
                 ],
                 onChanged: (value) {
                   if (value != null) setState(() => condition = value);
                 },
               ),
-              if (error != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 12),
-                  child: Text(
-                    error!,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.error,
-                    ),
-                  ),
+            ),
+            if (error != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: Text(
+                  error!,
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
                 ),
-            ],
-          ),
+              ),
+          ],
         ),
       ),
     ),
@@ -140,9 +155,10 @@ class _BookCreateDialogState extends State<BookCreateDialog> {
     int lines = 1,
   }) => TextFormField(
     controller: controller,
+    minLines: 1,
     maxLines: lines,
     validator: _required,
-    decoration: InputDecoration(labelText: label),
+    decoration: InputDecoration(labelText: label, isDense: true),
   );
 
   String? _required(String? value) =>

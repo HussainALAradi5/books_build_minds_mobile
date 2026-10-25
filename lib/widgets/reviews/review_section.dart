@@ -159,12 +159,14 @@ class _ReviewComposerState extends State<_ReviewComposer> {
           ),
           TextField(
             controller: comment,
+            minLines: 1,
             maxLines: 3,
             decoration: const InputDecoration(labelText: 'Your comment'),
           ),
           const SizedBox(height: 10),
           TextField(
             controller: description,
+            minLines: 1,
             maxLines: 3,
             decoration: const InputDecoration(
               labelText: 'More detail (optional)',

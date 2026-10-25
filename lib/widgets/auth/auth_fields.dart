@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../enums/auth/auth_mode.dart';
 import '../../utils/auth/mobile_number.dart';
+import '../../utils/forms/non_negative_number_formatter.dart';
 
 class AuthFields extends StatefulWidget {
   const AuthFields({
@@ -85,11 +87,16 @@ class _AuthFieldsState extends State<AuthFields> {
         TextFormField(
           controller: widget.code,
           keyboardType: TextInputType.number,
+          inputFormatters: [
+            NonNegativeNumberFormatter(),
+            LengthLimitingTextInputFormatter(6),
+          ],
           decoration: const InputDecoration(
             labelText: 'Six-digit code',
             prefixIcon: Icon(Icons.password_rounded),
           ),
-          validator: _required,
+          validator: (value) =>
+              value?.length == 6 ? null : 'Enter the six-digit code',
         ),
         const SizedBox(height: 13),
       ],

@@ -7,6 +7,7 @@ import '../../dtos/admin/user_access_input.dart';
 import '../../models/admin/access_record.dart';
 import '../../services/admin/admin_service.dart';
 import 'access_choices.dart';
+import '../shared/responsive_form_dialog.dart';
 
 class AccessEditorDialog extends StatefulWidget {
   const AccessEditorDialog({
@@ -110,80 +111,85 @@ class _AccessEditorDialogState extends State<AccessEditorDialog> {
   Widget build(BuildContext context) {
     final resource = widget.resource;
     final isUser = resource == 'users';
-    return AlertDialog(
-      title: Text(
-        '${widget.record == null ? 'Add' : 'Edit'} ${resource.substring(0, resource.length - 1)}',
-      ),
+    return ResponsiveFormDialog(
+      title:
+          '${widget.record == null ? 'Add' : 'Edit'} ${resource.substring(0, resource.length - 1)}',
+      busy: busy,
       content: SizedBox(
         width: 480,
         child: Form(
           key: formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (resource == 'permissions' || resource == 'roles')
-                  TextFormField(
-                    controller: keyField,
-                    enabled: widget.record == null,
-                    decoration: const InputDecoration(labelText: 'Key'),
-                    validator: (value) => (value?.trim().isEmpty ?? true)
-                        ? 'Key is required'
-                        : null,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (resource == 'permissions' || resource == 'roles')
+                TextFormField(
+                  controller: keyField,
+                  enabled: widget.record == null,
+                  decoration: const InputDecoration(
+                    labelText: 'Key',
+                    isDense: true,
                   ),
-                if (!isUser)
-                  TextFormField(
-                    controller: nameField,
-                    decoration: InputDecoration(
-                      labelText: resource == 'permissions' ? 'Label' : 'Name',
+                  validator: (value) => (value?.trim().isEmpty ?? true)
+                      ? 'Key is required'
+                      : null,
+                ),
+              if (resource == 'permissions' || resource == 'roles')
+                const SizedBox(height: 12),
+              if (!isUser)
+                TextFormField(
+                  controller: nameField,
+                  decoration: InputDecoration(
+                    labelText: resource == 'permissions' ? 'Label' : 'Name',
+                    isDense: true,
+                  ),
+                  validator: (value) => (value?.trim().isEmpty ?? true)
+                      ? 'Name is required'
+                      : null,
+                ),
+              if (!isUser) const SizedBox(height: 12),
+              if (!isUser)
+                TextFormField(
+                  controller: descriptionField,
+                  minLines: 1,
+                  maxLines: 2,
+                  decoration: const InputDecoration(
+                    labelText: 'Description',
+                    isDense: true,
+                  ),
+                ),
+              if (isUser)
+                DropdownButtonFormField<String>(
+                  initialValue: role,
+                  decoration: const InputDecoration(labelText: 'Account role'),
+                  items: const ['visitor', 'client', 'employee', 'admin']
+                      .map(
+                        (value) =>
+                            DropdownMenuItem(value: value, child: Text(value)),
+                      )
+                      .toList(),
+                  onChanged: (value) => setState(() => role = value ?? role),
+                ),
+              if (resource == 'roles' || resource == 'groups' || isUser)
+                AccessChoices(
+                  service: widget.service,
+                  resource: resource,
+                  selectedKeys: selectedKeys,
+                  selectedGroups: selectedGroups,
+                  onChange: () => setState(() {}),
+                ),
+              if (error != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 12),
+                  child: Text(
+                    error!,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.error,
                     ),
-                    validator: (value) => (value?.trim().isEmpty ?? true)
-                        ? 'Name is required'
-                        : null,
                   ),
-                if (!isUser)
-                  TextFormField(
-                    controller: descriptionField,
-                    maxLines: 2,
-                    decoration: const InputDecoration(labelText: 'Description'),
-                  ),
-                if (isUser)
-                  DropdownButtonFormField<String>(
-                    initialValue: role,
-                    decoration: const InputDecoration(
-                      labelText: 'Account role',
-                    ),
-                    items: const ['visitor', 'client', 'employee', 'admin']
-                        .map(
-                          (value) => DropdownMenuItem(
-                            value: value,
-                            child: Text(value),
-                          ),
-                        )
-                        .toList(),
-                    onChanged: (value) => setState(() => role = value ?? role),
-                  ),
-                if (resource == 'roles' || resource == 'groups' || isUser)
-                  AccessChoices(
-                    service: widget.service,
-                    resource: resource,
-                    selectedKeys: selectedKeys,
-                    selectedGroups: selectedGroups,
-                    onChange: () => setState(() {}),
-                  ),
-                if (error != null)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 12),
-                    child: Text(
-                      error!,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.error,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
+                ),
+            ],
           ),
         ),
       ),

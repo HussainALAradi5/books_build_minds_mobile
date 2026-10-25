@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../dtos/admin/catalog_profile_request.dart';
 import '../../models/catalog/country.dart';
 import '../../services/admin/admin_service.dart';
+import '../shared/responsive_form_dialog.dart';
 
 class CreatorCreateDialog extends StatefulWidget {
   const CreatorCreateDialog({
@@ -39,47 +40,58 @@ class _CreatorCreateDialogState extends State<CreatorCreateDialog> {
   }
 
   @override
-  Widget build(BuildContext context) => AlertDialog(
-    title: Text('Add ${widget.kind == 'authors' ? 'author' : 'publisher'}'),
+  Widget build(BuildContext context) => ResponsiveFormDialog(
+    title: 'Add ${widget.kind == 'authors' ? 'author' : 'publisher'}',
+    busy: busy,
     content: SizedBox(
       width: 400,
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: name,
-              maxLength: 255,
-              decoration: const InputDecoration(labelText: 'Name'),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            controller: name,
+            maxLength: 255,
+            decoration: const InputDecoration(
+              labelText: 'Name',
+              isDense: true,
+              counterText: '',
             ),
-            FutureBuilder<List<Country>>(
-              future: countries,
-              builder: (context, snapshot) => DropdownButtonFormField<String>(
-                initialValue: countryCode,
-                decoration: const InputDecoration(
-                  labelText: 'Country (optional)',
-                ),
-                items: [
-                  const DropdownMenuItem(value: '', child: Text('None')),
-                  for (final item in snapshot.data ?? <Country>[])
-                    DropdownMenuItem(value: item.code, child: Text(item.name)),
-                ],
-                onChanged: (value) => setState(() => countryCode = value),
+          ),
+          const SizedBox(height: 12),
+          FutureBuilder<List<Country>>(
+            future: countries,
+            builder: (context, snapshot) => DropdownButtonFormField<String>(
+              initialValue: countryCode,
+              decoration: const InputDecoration(
+                labelText: 'Country (optional)',
+                isDense: true,
               ),
+              items: [
+                const DropdownMenuItem(value: '', child: Text('None')),
+                for (final item in snapshot.data ?? <Country>[])
+                  DropdownMenuItem(value: item.code, child: Text(item.name)),
+              ],
+              onChanged: (value) => setState(() => countryCode = value),
             ),
-            TextField(
-              controller: description,
-              maxLines: 3,
-              maxLength: 5000,
-              decoration: const InputDecoration(labelText: 'Description'),
+          ),
+          const SizedBox(height: 12),
+          TextField(
+            controller: description,
+            minLines: 1,
+            maxLines: 3,
+            maxLength: 5000,
+            decoration: const InputDecoration(
+              labelText: 'Description',
+              isDense: true,
+              counterText: '',
             ),
-            if (error != null)
-              Text(
-                error!,
-                style: TextStyle(color: Theme.of(context).colorScheme.error),
-              ),
-          ],
-        ),
+          ),
+          if (error != null)
+            Text(
+              error!,
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            ),
+        ],
       ),
     ),
     actions: [

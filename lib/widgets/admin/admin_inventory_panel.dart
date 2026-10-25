@@ -37,6 +37,7 @@ class _AdminInventoryPanelState extends State<AdminInventoryPanel> {
   final search = TextEditingController();
   bool busy = false;
   bool grid = false;
+  bool toolsOpen = false;
 
   @override
   void initState() {
@@ -108,57 +109,71 @@ class _AdminInventoryPanelState extends State<AdminInventoryPanel> {
               icon: Icon(grid ? Icons.view_list : Icons.grid_view),
               onPressed: () => setState(() => grid = !grid),
             ),
-          ],
-        ),
-      ),
-      Padding(
-        padding: const EdgeInsets.all(12),
-        child: Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            if (widget.permissions.contains('book:write.bulk'))
-              OutlinedButton.icon(
-                onPressed: busy ? null : _import,
-                icon: const Icon(Icons.upload_file_outlined),
-                label: const Text('Import CSV/XLSX'),
-              ),
-            OutlinedButton.icon(
-              onPressed: busy ? null : () => _export('xlsx'),
-              icon: const Icon(Icons.table_view_outlined),
-              label: const Text('Export Excel'),
-            ),
-            OutlinedButton.icon(
-              onPressed: busy ? null : () => _export('csv'),
-              icon: const Icon(Icons.table_rows_outlined),
-              label: const Text('Export CSV'),
-            ),
-            OutlinedButton.icon(
-              onPressed: busy ? null : () => _export('pdf'),
-              icon: const Icon(Icons.picture_as_pdf_outlined),
-              label: const Text('Export PDF'),
-            ),
-            if (selected.isNotEmpty &&
-                widget.permissions.contains('book:edit.bulk')) ...[
-              OutlinedButton(
-                onPressed: busy ? null : () => _bulk('archive'),
-                child: const Text('Archive selected'),
-              ),
-              OutlinedButton(
-                onPressed: busy ? null : () => _bulk('unarchive'),
-                child: const Text('Restore selected'),
-              ),
-              TextButton(
-                onPressed: busy ? null : () => _bulk('delete'),
-                style: TextButton.styleFrom(
-                  foregroundColor: Theme.of(context).colorScheme.error,
+            Badge(
+              isLabelVisible: selected.isNotEmpty,
+              label: Text('${selected.length}'),
+              child: IconButton.filledTonal(
+                tooltip: toolsOpen
+                    ? 'Close inventory tools'
+                    : 'Show inventory tools',
+                icon: Icon(
+                  toolsOpen ? Icons.close_rounded : Icons.more_horiz_rounded,
                 ),
-                child: const Text('Delete selected'),
+                onPressed: () => setState(() => toolsOpen = !toolsOpen),
               ),
-            ],
+            ),
           ],
         ),
       ),
+      if (toolsOpen)
+        Padding(
+          padding: const EdgeInsets.all(12),
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              if (widget.permissions.contains('book:write.bulk'))
+                OutlinedButton.icon(
+                  onPressed: busy ? null : _import,
+                  icon: const Icon(Icons.upload_file_outlined),
+                  label: const Text('Import CSV/XLSX'),
+                ),
+              OutlinedButton.icon(
+                onPressed: busy ? null : () => _export('xlsx'),
+                icon: const Icon(Icons.table_view_outlined),
+                label: const Text('Export Excel'),
+              ),
+              OutlinedButton.icon(
+                onPressed: busy ? null : () => _export('csv'),
+                icon: const Icon(Icons.table_rows_outlined),
+                label: const Text('Export CSV'),
+              ),
+              OutlinedButton.icon(
+                onPressed: busy ? null : () => _export('pdf'),
+                icon: const Icon(Icons.picture_as_pdf_outlined),
+                label: const Text('Export PDF'),
+              ),
+              if (selected.isNotEmpty &&
+                  widget.permissions.contains('book:edit.bulk')) ...[
+                OutlinedButton(
+                  onPressed: busy ? null : () => _bulk('archive'),
+                  child: const Text('Archive selected'),
+                ),
+                OutlinedButton(
+                  onPressed: busy ? null : () => _bulk('unarchive'),
+                  child: const Text('Restore selected'),
+                ),
+                TextButton(
+                  onPressed: busy ? null : () => _bulk('delete'),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Theme.of(context).colorScheme.error,
+                  ),
+                  child: const Text('Delete selected'),
+                ),
+              ],
+            ],
+          ),
+        ),
       if (busy) const LinearProgressIndicator(),
       Expanded(
         child: FutureBuilder<PageResult<Book>>(
@@ -250,25 +265,19 @@ class _AdminInventoryPanelState extends State<AdminInventoryPanel> {
                   );
                 }
                 final book = result.items[index];
-                return Column(
-                  children: [
-                    if (widget.permissions.contains('book:edit.bulk'))
-                      CheckboxListTile(
-                        value: selected.contains(book.bookId),
-                        title: Text('Select ${book.title}'),
-                        onChanged: (value) => setState(
-                          () => value == true
+                return InventoryTile(
+                  book: book,
+                  service: widget.service,
+                  refresh: _reload,
+                  canEdit: widget.permissions.contains('book:edit.any'),
+                  selected: selected.contains(book.bookId),
+                  onSelected: widget.permissions.contains('book:edit.bulk')
+                      ? (value) => setState(
+                          () => value
                               ? selected.add(book.bookId)
                               : selected.remove(book.bookId),
-                        ),
-                      ),
-                    InventoryTile(
-                      book: book,
-                      service: widget.service,
-                      refresh: _reload,
-                      canEdit: widget.permissions.contains('book:edit.any'),
-                    ),
-                  ],
+                        )
+                      : null,
                 );
               },
             );

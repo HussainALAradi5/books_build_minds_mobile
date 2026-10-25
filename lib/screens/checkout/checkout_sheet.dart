@@ -8,6 +8,7 @@ import '../../models/loans/loan_quote.dart';
 import '../../services/checkout/transaction_service.dart';
 import '../../models/checkout/library_transaction.dart';
 import '../../widgets/checkout/checkout_amount_card.dart';
+import '../../widgets/shared/modal_heading.dart';
 
 class CheckoutSheet extends StatefulWidget {
   const CheckoutSheet({
@@ -40,86 +41,95 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
     top: false,
     child: Padding(
       padding: const EdgeInsets.fromLTRB(22, 16, 22, 28),
-      child: FutureBuilder<LoanQuote>(
-        future: quote,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) return Text('${snapshot.error}');
-          if (!snapshot.hasData) {
-            return const SizedBox(
-              height: 170,
-              child: Center(child: CircularProgressIndicator()),
-            );
-          }
-          final value = snapshot.data!;
-          final minor = widget.kind == 'purchase'
-              ? value.purchaseAmountMinor
-              : value.rentalAmountMinor;
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                widget.kind == 'purchase' ? 'Make it yours' : 'Rent this book',
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'Test checkout · No card details are entered in this app.',
-              ),
-              const SizedBox(height: 22),
-              CheckoutAmountCard(
-                amountMinor: minor,
-                currencyScale: value.currencyScale,
-                kind: widget.kind,
-                rentalDays: value.rentalDays,
-              ),
-              if (transaction == null) ...[
-                const SizedBox(height: 12),
-                ...value.terms.map(
-                  (term) => Padding(
-                    padding: const EdgeInsets.only(bottom: 6),
-                    child: Text('• $term'),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.sizeOf(context).height * .78,
+        ),
+        child: SingleChildScrollView(
+          child: FutureBuilder<LoanQuote>(
+            future: quote,
+            builder: (context, snapshot) {
+              if (snapshot.hasError) return Text('${snapshot.error}');
+              if (!snapshot.hasData) {
+                return const SizedBox(
+                  height: 170,
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              }
+              final value = snapshot.data!;
+              final minor = widget.kind == 'purchase'
+                  ? value.purchaseAmountMinor
+                  : value.rentalAmountMinor;
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ModalHeading(
+                    title: widget.kind == 'purchase'
+                        ? 'Make it yours'
+                        : 'Rent this book',
                   ),
-                ),
-                CheckboxListTile(
-                  value: accepted,
-                  contentPadding: EdgeInsets.zero,
-                  title: const Text('I accept the current terms'),
-                  onChanged: (v) => setState(() => accepted = v ?? false),
-                ),
-              ] else ...[
-                const SizedBox(height: 12),
-                Text('Server status: ${transaction!.status}'),
-                if (transaction!.failureReason != null)
-                  Text(transaction!.failureReason!),
-              ],
-              if (error != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 9),
-                  child: Text(
-                    error!,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.error,
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Test checkout · No card details are entered in this app.',
+                  ),
+                  const SizedBox(height: 22),
+                  CheckoutAmountCard(
+                    amountMinor: minor,
+                    currencyScale: value.currencyScale,
+                    kind: widget.kind,
+                    rentalDays: value.rentalDays,
+                  ),
+                  if (transaction == null) ...[
+                    const SizedBox(height: 12),
+                    ...value.terms.map(
+                      (term) => Padding(
+                        padding: const EdgeInsets.only(bottom: 6),
+                        child: Text('• $term'),
+                      ),
                     ),
+                    CheckboxListTile(
+                      value: accepted,
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text('I accept the current terms'),
+                      onChanged: (v) => setState(() => accepted = v ?? false),
+                    ),
+                  ] else ...[
+                    const SizedBox(height: 12),
+                    Text('Server status: ${transaction!.status}'),
+                    if (transaction!.failureReason != null)
+                      Text(transaction!.failureReason!),
+                  ],
+                  if (error != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 9),
+                      child: Text(
+                        error!,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
+                    ),
+                  const SizedBox(height: 18),
+                  LoadingActionButton(
+                    expand: true,
+                    onPressed: busy || (transaction == null && !accepted)
+                        ? null
+                        : () =>
+                              transaction == null ? _checkout(value) : _sync(),
+                    loading: busy,
+                    icon: transaction == null
+                        ? Icons.open_in_new_rounded
+                        : Icons.refresh_rounded,
+                    label: transaction == null
+                        ? 'Open secure test checkout'
+                        : 'Refresh server status',
                   ),
-                ),
-              const SizedBox(height: 18),
-              LoadingActionButton(
-                expand: true,
-                onPressed: busy || (transaction == null && !accepted)
-                    ? null
-                    : () => transaction == null ? _checkout(value) : _sync(),
-                loading: busy,
-                icon: transaction == null
-                    ? Icons.open_in_new_rounded
-                    : Icons.refresh_rounded,
-                label: transaction == null
-                    ? 'Open secure test checkout'
-                    : 'Refresh server status',
-              ),
-            ],
-          );
-        },
+                ],
+              );
+            },
+          ),
+        ),
       ),
     ),
   );
