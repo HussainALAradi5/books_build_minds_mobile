@@ -41,6 +41,10 @@ flutter run -d <device-id> --dart-define=API_BASE_URL=http://127.0.0.1:5000
 
 `adb reverse` lets the phone reach the computer's local server through USB. Keep the device connected while testing. For a release build, use an HTTPS server URL instead.
 
+After seeding the server, pull down on Explore to refresh the catalog. The local demo now has 18 books across new, good, fair, and damaged conditions. Use the filter sheet and list/grid toggle to check the larger catalog.
+
+On this Windows workstation the native Java socket used by Gradle needs a process-local fallback. Before `flutter run`, use PowerShell to set `$env:JAVA_TOOL_OPTIONS='-Djdk.net.unixdomain.tmpdir=C:\__bbm_no_unix_socket__'` and select JDK 21 with `flutter config --jdk-dir='C:\Program Files\Java\jdk-21'`. The Android project disables Kotlin incremental compilation because the Pub cache is on C: and this checkout is on D:. Neither setting changes the app's runtime API configuration.
+
 | Role | Username | Password | Example access |
 | --- | --- | --- | --- |
 | Administrator | `demo_admin` | `LibraryAdmin2026!` | Inventory prices and access overview |
@@ -68,7 +72,9 @@ The UI is built with Flutter Material 3. `lib` has one parent folder per concern
 
 ## Mobile screenshots
 
-These Flutter renders show the current mobile UI with deterministic sample API responses. The layout checks cover 320 × 700, 360 × 780, and 390 × 844 logical pixels; the Magic7 Pro preview uses 1280 × 2800 physical pixels at 3× scaling (about 427 dp wide). Transaction and activity records are sample responses; the borrow and checkout previews stop before submission. They are layout previews, not evidence of a live server session or a device installation. Regenerate them with `flutter test --update-goldens tool/capture_mobile_previews.dart` and `flutter test --update-goldens tool/capture_operation_previews.dart` while `FLUTTER_ROOT` points to the Flutter SDK.
+The first image below was captured from the app running on a connected HONOR Magic7 Pro against the local Flask server on October 25, 2026. The remaining Flutter renders use deterministic sample API responses. Their layout checks cover 320 × 700, 360 × 780, and 390 × 844 logical pixels; the Magic7 Pro preview uses 1280 × 2800 physical pixels at 3× scaling (about 427 dp wide). Transaction and activity records are sample responses; the borrow and checkout previews stop before submission. Regenerate those previews with `flutter test --update-goldens tool/capture_mobile_previews.dart` and `flutter test --update-goldens tool/capture_operation_previews.dart` while `FLUTTER_ROOT` points to the Flutter SDK.
+
+![Live catalog on the connected HONOR Magic7 Pro](screenshots/mobile/honor-magic7-pro-live.png)
 
 | Catalog · light | Catalog · dark |
 | --- | --- |
@@ -116,4 +122,4 @@ Android APK output is under `build/app/outputs/flutter-apk/`. A successful stati
 
 ## Current scope
 
-The app implements reader workflows and the core administrator actions available through the server API. Mobile push notifications, offline synchronization, and production payment integration are outside this build. The server sandbox checkout is for demonstrations only. Analyzer and Flutter tests pass; the Android APK build on this workstation currently stops before compilation because Gradle cannot establish its local loopback connection. Repeat `flutter build apk --debug` in a functioning Android build environment and complete a physical-device walkthrough before release. No Android device was connected during this verification.
+The app implements reader workflows and the core administrator actions available through the server API. Mobile push notifications, offline synchronization, and production payment integration are outside this build. The server sandbox checkout is for demonstrations only. Analyzer and Flutter tests pass; the debug Android APK built, installed, and fetched catalog data from Flask on a connected HONOR Magic7 Pro. Continue the account, borrow/return, review, media, and sandbox checkout walkthrough on the phone before a release decision.
