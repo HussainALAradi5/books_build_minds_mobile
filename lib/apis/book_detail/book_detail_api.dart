@@ -11,4 +11,7 @@ class BookDetailApi {
 
   Uri printUrl(String slug) =>
       client.endpointUri('${ApiPaths.book(slug)}/print');
+
+  Future<Map<String, dynamic>> codes(String slug) =>
+      client.get('${ApiPaths.book(slug)}/codes');
 }

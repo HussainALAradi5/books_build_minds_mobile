@@ -15,6 +15,9 @@ import 'package:books_build_minds_mobile/dtos/auth/login_request.dart';
 import 'package:books_build_minds_mobile/dtos/auth/register_request.dart';
 import 'package:books_build_minds_mobile/utils/auth/mobile_number.dart';
 import 'package:books_build_minds_mobile/shared/network/api_failure.dart';
+import 'package:books_build_minds_mobile/dtos/admin/create_book_request.dart';
+import 'package:books_build_minds_mobile/dtos/admin/role_input.dart';
+import 'package:books_build_minds_mobile/models/book_detail/book_codes.dart';
 
 void main() {
   test('maps the server page and book condition', () {
@@ -162,6 +165,42 @@ void main() {
         password: 'Reader123',
       ).toJson()['mobile_number'],
       isNull,
+    );
+  });
+
+  test('admin book and access inputs match Flask DTO names', () {
+    const book = CreateBookRequest(
+      title: 'Sample',
+      description: 'Description',
+      isbn: '1234567890123',
+      author: 'Writer',
+      publisher: 'Press',
+      publishedAt: '2020-01-01',
+      price: 3.5,
+      copiesTotal: 2,
+      condition: BookCondition.good,
+    );
+    expect(book.toJson()['published_at'], '2020-01-01');
+    expect(book.toJson()['copies_total'], 2);
+    expect(book.toJson()['condition'], 'good');
+    const role = RoleInput(
+      key: 'curator',
+      name: 'Curator',
+      description: '',
+      permissionKeys: ['book:read.any'],
+    );
+    expect(role.toJson()['permission_keys'], ['book:read.any']);
+  });
+
+  test('book codes reject non-SVG data URLs', () {
+    expect(
+      () => BookCodes.fromJson({
+        'book_url': 'https://example.test',
+        'barcode_value': '123',
+        'qr_image': 'javascript:bad',
+        'barcode_image': 'data:image/svg+xml;base64,PHN2Zy8+',
+      }),
+      throwsFormatException,
     );
   });
 }

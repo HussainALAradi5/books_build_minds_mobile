@@ -31,4 +31,10 @@ class TransactionService {
 
   Future<LibraryTransaction> sync(String id) async =>
       LibraryTransaction.fromJson(await _api.sync(id));
+
+  Future<LibraryTransaction> detail(String id) async =>
+      LibraryTransaction.fromJson(await _api.detail(id));
+
+  Future<LibraryTransaction> cancel(String id) async =>
+      LibraryTransaction.fromJson(await _api.cancel(id));
 }

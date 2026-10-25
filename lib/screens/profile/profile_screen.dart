@@ -7,6 +7,8 @@ import '../../widgets/shared/state_panel.dart';
 import '../../widgets/shared/status_badge.dart';
 import '../../widgets/shared/user_avatar.dart';
 import '../auth/auth_screen.dart';
+import '../../services/media/media_service.dart';
+import '../../widgets/shared/image_picker_button.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -76,6 +78,17 @@ class ProfileScreen extends StatelessWidget {
                   ],
                 ),
                 const Divider(height: 30),
+                if (user.permissions.contains('profile-media:write.own')) ...[
+                  ImagePickerButton(
+                    label: 'Change profile photo',
+                    onPicked: (files) async {
+                      await MediaService(AppScope.of(context).api)
+                          .uploadProfile(files.single);
+                      await session.refresh();
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                ],
                 Text(
                   'EMAIL ADDRESS',
                   style: Theme.of(context).textTheme.labelSmall,

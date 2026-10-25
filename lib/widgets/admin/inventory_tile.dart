@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import '../../utils/shared/formatters.dart';
 import '../../models/catalog/book.dart';
 import '../../services/admin/admin_service.dart';
+import '../../app/app_scope.dart';
+import '../../services/media/media_service.dart';
+import '../shared/image_picker_button.dart';
 
 class InventoryTile extends StatelessWidget {
   const InventoryTile({
@@ -37,6 +40,18 @@ class InventoryTile extends StatelessWidget {
               ),
             ],
           ),
+          if (AppScope.of(context).session.user?.permissions
+                  .contains('book-media:write.one') ??
+              false)
+            ImagePickerButton(
+              label: 'Add book images',
+              multiple: true,
+              onPicked: (files) async {
+                await MediaService(AppScope.of(context).api)
+                    .uploadBook(book.bookId, files);
+                refresh();
+              },
+            ),
           const SizedBox(height: 6),
           Text(
             '${book.author} · ${book.availableCopies}/${book.copiesTotal} copies',

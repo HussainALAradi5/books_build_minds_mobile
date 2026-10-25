@@ -12,6 +12,7 @@ class BookActions extends StatelessWidget {
     required this.onPurchase,
     required this.onRent,
     required this.onPrint,
+    required this.onCodes,
     required this.onSignIn,
   });
 
@@ -24,6 +25,7 @@ class BookActions extends StatelessWidget {
   final VoidCallback onPurchase;
   final VoidCallback onRent;
   final VoidCallback onPrint;
+  final VoidCallback onCodes;
   final VoidCallback onSignIn;
 
   @override
@@ -54,6 +56,14 @@ class BookActions extends StatelessWidget {
         ],
       ),
       const SizedBox(height: 9),
+      Align(
+        alignment: Alignment.centerRight,
+        child: TextButton.icon(
+          onPressed: onCodes,
+          icon: const Icon(Icons.qr_code_2_rounded),
+          label: const Text('QR and barcode'),
+        ),
+      ),
       Row(
         children: [
           Expanded(

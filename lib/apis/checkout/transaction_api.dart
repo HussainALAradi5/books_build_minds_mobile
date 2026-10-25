@@ -18,4 +18,10 @@ class TransactionApi {
 
   Future<Map<String, dynamic>> sync(String id) =>
       client.post('${ApiPaths.transaction(id)}/sync');
+
+  Future<Map<String, dynamic>> detail(String id) =>
+      client.get(ApiPaths.transaction(id), authenticated: true);
+
+  Future<Map<String, dynamic>> cancel(String id) =>
+      client.post('${ApiPaths.transaction(id)}/cancel');
 }

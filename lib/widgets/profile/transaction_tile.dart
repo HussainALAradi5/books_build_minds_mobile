@@ -5,6 +5,8 @@ import '../shared/status_badge.dart';
 import '../../services/checkout/transaction_service.dart';
 import '../../models/checkout/library_transaction.dart';
 import '../../enums/checkout/transaction_status.dart';
+import '../../services/receipts/receipt_service.dart';
+import 'transaction_details_dialog.dart';
 
 class TransactionTile extends StatelessWidget {
   const TransactionTile({
@@ -12,11 +14,13 @@ class TransactionTile extends StatelessWidget {
     required this.item,
     required this.service,
     required this.refresh,
+    required this.receipts,
   });
 
   final LibraryTransaction item;
   final TransactionService service;
   final VoidCallback refresh;
+  final ReceiptService receipts;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +53,18 @@ class TransactionTile extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 7),
                 child: Text(item.failureReason!),
               ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton.icon(
+                onPressed: () => showDialog<void>(
+                  context: context,
+                  builder: (_) =>
+                      TransactionDetailsDialog(id: item.id, service: service),
+                ),
+                icon: const Icon(Icons.info_outline),
+                label: const Text('Details'),
+              ),
+            ),
             if (item.status == 'pending')
               Align(
                 alignment: Alignment.centerRight,
@@ -66,6 +82,29 @@ class TransactionTile extends StatelessWidget {
                   },
                   icon: const Icon(Icons.refresh_rounded),
                   label: const Text('Refresh status'),
+                ),
+              ),
+            if (item.status == 'completed')
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton.icon(
+                  onPressed: () async {
+                    try {
+                      final saved = await receipts.saveTransaction(item.id);
+                      if (context.mounted && saved) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Receipt saved.')),
+                        );
+                      }
+                    } catch (failure) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text('$failure')));
+                      }
+                    }
+                  },
+                  icon: const Icon(Icons.picture_as_pdf_outlined),
+                  label: const Text('Save receipt'),
                 ),
               ),
           ],

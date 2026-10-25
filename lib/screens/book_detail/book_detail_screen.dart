@@ -13,6 +13,9 @@ import '../../controllers/book_detail/book_detail_controller.dart';
 import '../../widgets/book_detail/book_actions.dart';
 import '../../widgets/book_detail/book_info_card.dart';
 import '../../utils/book_detail/book_detail_actions.dart';
+import '../../services/media/media_service.dart';
+import '../../services/reviews/book_realtime_service.dart';
+import '../../widgets/media/book_media_gallery.dart';
 
 class BookDetailScreen extends StatefulWidget {
   const BookDetailScreen({super.key, required this.slug});
@@ -29,6 +32,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
   TransactionService? transactions;
   BookDetailService? bookDetails;
   ApiClient? api;
+  BookRealtimeService? realtime;
 
   @override
   void didChangeDependencies() {
@@ -50,11 +54,15 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
       ReviewService(scope.api),
       scope.session.user,
     );
+    realtime = BookRealtimeService(scope.api.origin, widget.slug, () {
+      if (mounted) controller?.load();
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) => controller?.load());
   }
 
   @override
   void dispose() {
+    realtime?.dispose();
     controller?.dispose();
     super.dispose();
   }
@@ -148,6 +156,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                               onPurchase: () => actions.checkout('purchase'),
                               onRent: () => actions.checkout('rental'),
                               onPrint: actions.printBook,
+                              onCodes: actions.codes,
                               onSignIn: actions.signIn,
                             ),
                             const SizedBox(height: 10),
@@ -209,6 +218,12 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                       },
                     ),
                     const SizedBox(height: 28),
+                    BookMediaGallery(
+                      bookId: book.bookId,
+                      media: MediaService(api!),
+                      api: api!,
+                    ),
+                    const SizedBox(height: 20),
                     ReviewSection(controller: state),
                   ],
                 ),
@@ -228,6 +243,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
   );
 
   void _onSignedIn() {
+    realtime?.dispose();
     controller?.dispose();
     _createController();
     setState(() {});

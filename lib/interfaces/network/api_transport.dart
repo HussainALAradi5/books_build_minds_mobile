@@ -1,3 +1,6 @@
+import 'downloaded_file.dart';
+import 'upload_file.dart';
+
 abstract interface class ApiTransport {
   Uri endpointUri(String path);
   Uri assetUri(String path);
@@ -27,4 +30,17 @@ abstract interface class ApiTransport {
   });
 
   Future<Map<String, dynamic>> delete(String path);
+
+  Future<DownloadedFile> download(
+    String path, {
+    required String fileName,
+    String? expectedMimeType,
+    Map<String, String>? query,
+  });
+
+  Future<Map<String, dynamic>> upload(
+    String path,
+    List<UploadFile> files, {
+    String fieldName = 'files',
+  });
 }

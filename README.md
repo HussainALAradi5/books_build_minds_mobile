@@ -52,10 +52,11 @@ Demo credentials work after `flask --app app seed-demo --test-accounts` in a non
 ## Mobile flows
 
 - **Explore:** searchable, filtered, paginated grid or list from the server; condition colors and book detail.
-- **Book detail:** description, stock, creator information, printable PDF, three-step borrow flow, rent and purchase checkout, and purchase-gated reviews. Checkout uses the server's sandbox flow; the app verifies the resulting transaction through the API.
+- **Book detail:** description, stock, creator information, printable PDF, server QR/barcode, zoomable book images, live book refresh, three-step borrow flow, rent and purchase checkout, and purchase-gated reviews. Checkout uses the server's sandbox flow; the app verifies the resulting transaction through the API.
 - **Library:** loans, owned books, transactions, and activity in separate tabs.
 - **Account:** sign in with username, email, or registered mobile number; register with an optional international mobile number; reset a password with the server's email code; sign out. JWTs are stored in OS-backed secure storage.
-- **Admin:** inventory listing, price edit, and read-only access records. The server remains the authority for every permission and business rule.
+- **Admin:** server-filtered inventory grid/list, price edit, book and creator creation, country sync, image uploads, CSV/XLSX import, PDF/Excel/CSV export, bulk archive/delete, and permission/role/group/user access management. The server remains the authority for every permission and business rule.
+- **Files and payments:** account photo upload, authenticated transaction receipt download, and transaction details. Pending hosted payments remain pending until server verification; closing checkout does not cancel them.
 
 ### Switch light and dark mode
 
@@ -115,4 +116,4 @@ Android APK output is under `build/app/outputs/flutter-apk/`. A successful stati
 
 ## Current scope
 
-This client implements core reader workflows and a compact administrator view. The web client remains the full management surface for media uploads, creator and country editing, imports/exports, bulk actions, role and group changes, and richer reporting. Mobile push notifications, offline synchronization, and production payment integration are outside this build. The server sandbox checkout is for demonstrations only.
+The app implements reader workflows and the core administrator actions available through the server API. Mobile push notifications, offline synchronization, and production payment integration are outside this build. The server sandbox checkout is for demonstrations only. Analyzer and Flutter tests pass; the Android APK build on this workstation currently stops before compilation because Gradle cannot establish its local loopback connection. Repeat `flutter build apk --debug` in a functioning Android build environment and complete a physical-device walkthrough before release. No Android device was connected during this verification.

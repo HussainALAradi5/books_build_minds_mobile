@@ -10,6 +10,7 @@ import '../../screens/loans/borrow_flow_sheet.dart';
 import '../../models/book_detail/creator_profile.dart';
 import '../../controllers/book_detail/book_detail_controller.dart';
 import '../../widgets/book_detail/creator_info_dialog.dart';
+import '../../widgets/book_detail/book_codes_dialog.dart';
 
 class BookDetailActions {
   const BookDetailActions({
@@ -102,6 +103,11 @@ class BookDetailActions {
       message('Could not open the book PDF.');
     }
   }
+
+  void codes() => showDialog<void>(
+    context: context,
+    builder: (_) => BookCodesDialog(service: bookDetails, slug: slug),
+  );
 
   void creator(String title, CreatorProfile profile) => showDialog<void>(
     context: context,

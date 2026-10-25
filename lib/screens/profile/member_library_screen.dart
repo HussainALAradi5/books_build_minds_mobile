@@ -13,6 +13,7 @@ import '../../models/loans/loan.dart';
 import '../../services/profile/profile_service.dart';
 import '../../widgets/profile/loan_tile.dart';
 import '../../widgets/profile/transaction_tile.dart';
+import '../../services/receipts/receipt_service.dart';
 
 class MemberLibraryScreen extends StatelessWidget {
   const MemberLibraryScreen({super.key});
@@ -114,6 +115,7 @@ class MemberLibraryScreen extends StatelessWidget {
                   itemBuilder: (context, item, refresh) => TransactionTile(
                     item: item,
                     service: transactionService,
+                    receipts: ReceiptService(scope.api),
                     refresh: refresh,
                   ),
                   emptyTitle: 'No transactions yet',

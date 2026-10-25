@@ -23,7 +23,9 @@ void main() {
         child: MaterialApp(
           home: Builder(
             builder: (context) => Scaffold(
-              body: Text(AppScope.of(context).session.user?.userName ?? 'guest'),
+              body: Text(
+                AppScope.of(context).session.user?.userName ?? 'guest',
+              ),
             ),
           ),
         ),
