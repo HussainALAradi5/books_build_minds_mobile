@@ -7,6 +7,7 @@ class BookFilter extends PaginationFilter {
   const BookFilter({
     this.query = '',
     this.publisher = '',
+    this.category = '',
     this.condition,
     this.minPrice,
     this.maxPrice,
@@ -18,6 +19,7 @@ class BookFilter extends PaginationFilter {
 
   final String query;
   final String publisher;
+  final String category;
   final BookCondition? condition;
   final double? minPrice;
   final double? maxPrice;
@@ -26,6 +28,7 @@ class BookFilter extends PaginationFilter {
   BookFilter copyWith({
     String? query,
     String? publisher,
+    String? category,
     BookCondition? condition,
     bool clearCondition = false,
     double? minPrice,
@@ -39,6 +42,7 @@ class BookFilter extends PaginationFilter {
   }) => BookFilter(
     query: query ?? this.query,
     publisher: publisher ?? this.publisher,
+    category: category ?? this.category,
     condition: clearCondition ? null : condition ?? this.condition,
     minPrice: clearMinPrice ? null : minPrice ?? this.minPrice,
     maxPrice: clearMaxPrice ? null : maxPrice ?? this.maxPrice,
@@ -51,9 +55,10 @@ class BookFilter extends PaginationFilter {
   @override
   Map<String, String> toQuery() => {
     ...super.toQuery(),
-    'sort': sort.name,
+    'sort': sort.wireValue,
     if (query.trim().isNotEmpty) 'q': query.trim(),
     if (publisher.isNotEmpty) 'publisher': publisher,
+    if (category.isNotEmpty) 'category': category,
     if (condition != null) 'condition': condition!.wireValue,
     if (minPrice != null) 'min_price': minPrice!.toStringAsFixed(3),
     if (maxPrice != null) 'max_price': maxPrice!.toStringAsFixed(3),

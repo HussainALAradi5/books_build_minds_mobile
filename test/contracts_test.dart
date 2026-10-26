@@ -175,6 +175,7 @@ void main() {
       isbn: '1234567890123',
       author: 'Writer',
       publisher: 'Press',
+      categoryIds: [1, 2],
       publishedAt: '2020-01-01',
       price: 3.5,
       copiesTotal: 2,
@@ -183,6 +184,7 @@ void main() {
     expect(book.toJson()['published_at'], '2020-01-01');
     expect(book.toJson()['copies_total'], 2);
     expect(book.toJson()['condition'], 'good');
+    expect(book.toJson()['category_ids'], [1, 2]);
     const role = RoleInput(
       key: 'curator',
       name: 'Curator',

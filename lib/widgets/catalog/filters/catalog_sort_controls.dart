@@ -35,24 +35,26 @@ class CatalogSortControls extends StatelessWidget {
             .toList(),
         onChanged: (value) => onSortChanged(value ?? BookSort.recent),
       ),
-      const SizedBox(height: 14),
-      SegmentedButton<SortDirection>(
-        segments: SortDirection.values
-            .map(
-              (value) => ButtonSegment(
-                value: value,
-                label: Text(value.label),
-                icon: Icon(
-                  value == SortDirection.asc
-                      ? Icons.arrow_upward_rounded
-                      : Icons.arrow_downward_rounded,
+      if (sort != BookSort.mostRated && sort != BookSort.bestSelling) ...[
+        const SizedBox(height: 14),
+        SegmentedButton<SortDirection>(
+          segments: SortDirection.values
+              .map(
+                (value) => ButtonSegment(
+                  value: value,
+                  label: Text(value.label),
+                  icon: Icon(
+                    value == SortDirection.asc
+                        ? Icons.arrow_upward_rounded
+                        : Icons.arrow_downward_rounded,
+                  ),
                 ),
-              ),
-            )
-            .toList(),
-        selected: {direction},
-        onSelectionChanged: (value) => onDirectionChanged(value.first),
-      ),
+              )
+              .toList(),
+          selected: {direction},
+          onSelectionChanged: (value) => onDirectionChanged(value.first),
+        ),
+      ],
     ],
   );
 }

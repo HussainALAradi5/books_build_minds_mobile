@@ -7,6 +7,7 @@ class CreateBookRequest {
     required this.isbn,
     required this.author,
     required this.publisher,
+    required this.categoryIds,
     required this.publishedAt,
     required this.price,
     required this.copiesTotal,
@@ -18,6 +19,7 @@ class CreateBookRequest {
   final String isbn;
   final String author;
   final String publisher;
+  final List<int> categoryIds;
   final String publishedAt;
   final double price;
   final int copiesTotal;
@@ -29,6 +31,7 @@ class CreateBookRequest {
     'isbn': isbn.trim(),
     'author': author.trim(),
     'publisher': publisher.trim(),
+    'category_ids': categoryIds,
     'published_at': publishedAt,
     'price': price,
     'copies_total': copiesTotal,

@@ -2,12 +2,14 @@ class CreatorProfile {
   const CreatorProfile({
     required this.name,
     required this.description,
+    required this.address,
     required this.country,
     required this.works,
   });
 
   final String name;
   final String description;
+  final String address;
   final String country;
   final List<String> works;
 
@@ -16,6 +18,7 @@ class CreatorProfile {
     return CreatorProfile(
       name: json['name'] as String? ?? '',
       description: json['description'] as String? ?? '',
+      address: json['address'] as String? ?? '',
       country: country?['name'] as String? ?? 'Not listed',
       works: (json['works'] as List<dynamic>? ?? [])
           .whereType<Map<String, dynamic>>()

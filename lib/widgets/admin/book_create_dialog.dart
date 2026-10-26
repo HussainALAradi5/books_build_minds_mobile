@@ -7,6 +7,9 @@ import '../shared/responsive_form_dialog.dart';
 import '../shared/responsive_field_row.dart';
 import '../shared/numeric_form_field.dart';
 import '../shared/status_badge.dart';
+import 'catalog_person_field.dart';
+import 'category_picker_field.dart';
+import '../../models/catalog/category.dart';
 
 class BookCreateDialog extends StatefulWidget {
   const BookCreateDialog({super.key, required this.service});
@@ -27,6 +30,7 @@ class _BookCreateDialogState extends State<BookCreateDialog> {
   final price = TextEditingController();
   final copies = TextEditingController(text: '1');
   BookCondition condition = BookCondition.good;
+  List<Category> selectedCategories = [];
   bool busy = false;
   String? error;
 
@@ -63,8 +67,24 @@ class _BookCreateDialogState extends State<BookCreateDialog> {
             _field(description, 'Description', lines: 3),
             const SizedBox(height: 12),
             ResponsiveFieldRow(
-              first: _field(author, 'Author'),
-              second: _field(publisher, 'Publisher'),
+              first: CatalogPersonField(
+                controller: author,
+                load: (filter) =>
+                    widget.service.catalogProfiles('authors', filter),
+                label: 'Author',
+              ),
+              second: CatalogPersonField(
+                controller: publisher,
+                load: (filter) =>
+                    widget.service.catalogProfiles('publishers', filter),
+                label: 'Publisher',
+              ),
+            ),
+            const SizedBox(height: 12),
+            CategoryPickerField(
+              load: widget.service.categories,
+              selected: selectedCategories,
+              onChanged: (value) => setState(() => selectedCategories = value),
             ),
             const SizedBox(height: 12),
             _field(isbn, 'ISBN'),
@@ -181,6 +201,10 @@ class _BookCreateDialogState extends State<BookCreateDialog> {
 
   Future<void> _submit() async {
     if (!form.currentState!.validate()) return;
+    if (selectedCategories.isEmpty) {
+      setState(() => error = 'Choose at least one category.');
+      return;
+    }
     setState(() {
       busy = true;
       error = null;
@@ -193,6 +217,7 @@ class _BookCreateDialogState extends State<BookCreateDialog> {
           isbn: isbn.text,
           author: author.text,
           publisher: publisher.text,
+          categoryIds: selectedCategories.map((item) => item.id).toList(),
           publishedAt: published.text,
           price: double.parse(price.text),
           copiesTotal: int.parse(copies.text),

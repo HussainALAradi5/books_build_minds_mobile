@@ -3,6 +3,7 @@ import '../../dtos/admin/update_price_request.dart';
 import '../../shared/network/api_paths.dart';
 import '../../filters/shared/pagination_filter.dart';
 import '../../filters/catalog/book_filter.dart';
+import '../../filters/catalog/catalog_search_filter.dart';
 import '../../dtos/admin/create_book_request.dart';
 import '../../dtos/admin/catalog_profile_request.dart';
 import '../../interfaces/network/downloaded_file.dart';
@@ -41,9 +42,26 @@ class AdminApi {
     CatalogProfileRequest input,
   ) => client.post('/$kind', body: input.toJson());
 
-  Future<Map<String, dynamic>> countries() => client.get(
+  Future<Map<String, dynamic>> catalogProfiles(
+    String kind,
+    CatalogSearchFilter filter,
+  ) => client.get('/$kind', query: filter.toQuery());
+
+  Future<Map<String, dynamic>> categories(CatalogSearchFilter filter) =>
+      client.get('/categories', query: filter.toQuery());
+
+  Future<Map<String, dynamic>> createCategory(String name) =>
+      client.post('/categories', body: {'name': name});
+
+  Future<Map<String, dynamic>> topCategories(int page, String sort) =>
+      client.get(
+        '/categories/top',
+        query: {'page': '$page', 'per_page': '6', 'sort': sort},
+      );
+
+  Future<Map<String, dynamic>> countries(int page) => client.get(
     '/countries',
-    query: const PaginationFilter(perPage: 50).toQuery(),
+    query: PaginationFilter(page: page, perPage: 50).toQuery(),
   );
 
   Future<Map<String, dynamic>> syncCountries() =>

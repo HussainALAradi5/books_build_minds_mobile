@@ -1,4 +1,5 @@
 import '../../enums/catalog/book_condition.dart';
+import 'category.dart';
 
 class Book {
   const Book({
@@ -7,6 +8,7 @@ class Book {
     required this.title,
     required this.author,
     required this.publisher,
+    this.categories = const [],
     required this.price,
     required this.copiesTotal,
     required this.availableCopies,
@@ -23,6 +25,7 @@ class Book {
   final String title;
   final String author;
   final String publisher;
+  final List<Category> categories;
   final double price;
   final int copiesTotal;
   final int availableCopies;
@@ -39,6 +42,10 @@ class Book {
     title: json['title'] as String? ?? '',
     author: json['author'] as String? ?? '',
     publisher: json['publisher'] as String? ?? '',
+    categories: (json['categories'] as List<dynamic>? ?? [])
+        .whereType<Map<String, dynamic>>()
+        .map(Category.fromJson)
+        .toList(),
     price: (json['price'] as num? ?? 0).toDouble(),
     copiesTotal: json['copies_total'] as int? ?? 0,
     availableCopies: json['available_copies'] as int? ?? 0,

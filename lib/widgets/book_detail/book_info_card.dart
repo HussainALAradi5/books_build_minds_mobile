@@ -49,6 +49,21 @@ class BookInfoCard extends StatelessWidget {
                   ?.copyWith(height: 1.55),
             ),
             const Divider(height: 28),
+            if (book.categories.isNotEmpty) ...[
+              Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: book.categories
+                    .map(
+                      (category) => Chip(
+                        label: Text(category.name),
+                        visualDensity: VisualDensity.compact,
+                      ),
+                    )
+                    .toList(),
+              ),
+              const SizedBox(height: 12),
+            ],
             Wrap(
               spacing: 20,
               runSpacing: 14,

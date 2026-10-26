@@ -46,6 +46,10 @@ class CreatorInfoDialog extends StatelessWidget {
                 Text(creator.country),
               ],
             ),
+            if (creator.address.isNotEmpty) ...[
+              const SizedBox(height: 10),
+              Text('Address: ${creator.address}'),
+            ],
             if (creator.works.isNotEmpty) ...[
               const SizedBox(height: 17),
               Text(

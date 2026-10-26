@@ -13,6 +13,9 @@ import '../../dtos/admin/role_input.dart';
 import '../../dtos/admin/group_input.dart';
 import '../../dtos/admin/user_access_input.dart';
 import '../../filters/catalog/book_filter.dart';
+import '../../filters/catalog/catalog_search_filter.dart';
+import '../../models/catalog/catalog_person.dart';
+import '../../models/catalog/category.dart';
 
 class AdminService {
   AdminService(ApiTransport client) : _api = AdminApi(client);
@@ -50,8 +53,32 @@ class AdminService {
     await _api.createProfile(kind, input);
   }
 
-  Future<PageResult<Country>> countries() async =>
-      PageResult.fromJson(await _api.countries(), Country.fromJson);
+  Future<PageResult<CatalogPerson>> catalogProfiles(
+    String kind,
+    CatalogSearchFilter filter,
+  ) async => PageResult.fromJson(
+    await _api.catalogProfiles(kind, filter),
+    CatalogPerson.fromJson,
+  );
+
+  Future<PageResult<Category>> categories(CatalogSearchFilter filter) async =>
+      PageResult.fromJson(await _api.categories(filter), Category.fromJson);
+
+  Future<void> createCategory(String name) async {
+    await _api.createCategory(name.trim());
+  }
+
+  Future<PageResult<Country>> countries([int page = 1]) async =>
+      PageResult.fromJson(await _api.countries(page), Country.fromJson);
+
+  Future<List<Country>> allCountries() async {
+    final items = <Country>[];
+    for (var page = 1; ; page++) {
+      final result = await countries(page);
+      items.addAll(result.items);
+      if (!result.hasNext) return items;
+    }
+  }
 
   Future<void> syncCountries() async {
     await _api.syncCountries();

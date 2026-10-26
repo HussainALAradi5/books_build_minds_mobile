@@ -3,6 +3,10 @@ import '../../interfaces/network/api_transport.dart';
 import '../../apis/catalog/book_api.dart';
 import '../../models/catalog/book.dart';
 import '../../filters/catalog/book_filter.dart';
+import '../../filters/catalog/catalog_search_filter.dart';
+import '../../models/catalog/category.dart';
+import '../../models/catalog/catalog_person.dart';
+import '../../models/catalog/top_category_group.dart';
 
 class BookService {
   BookService(ApiTransport client) : _api = BookApi(client);
@@ -15,12 +19,22 @@ class BookService {
   Future<Book> detail(String slug) async =>
       Book.fromJson(await _api.detail(slug));
 
-  Future<List<String>> publishers() async {
-    final page = await _api.publishers();
-    return (page['items'] as List<dynamic>? ?? [])
-        .whereType<Map<String, dynamic>>()
-        .map((item) => item['name'] as String? ?? '')
-        .where((name) => name.isNotEmpty)
-        .toList();
-  }
+  Future<PageResult<Category>> categories(CatalogSearchFilter filter) async =>
+      PageResult.fromJson(await _api.categories(filter), Category.fromJson);
+
+  Future<PageResult<CatalogPerson>> catalogProfiles(
+    String kind,
+    CatalogSearchFilter filter,
+  ) async => PageResult.fromJson(
+    await _api.catalogProfiles(kind, filter),
+    CatalogPerson.fromJson,
+  );
+
+  Future<PageResult<TopCategoryGroup>> topCategories(
+    int page,
+    String sort,
+  ) async => PageResult.fromJson(
+    await _api.topCategories(page, sort),
+    TopCategoryGroup.fromJson,
+  );
 }

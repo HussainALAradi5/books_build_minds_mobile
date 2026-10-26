@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import '../../services/admin/admin_service.dart';
 import 'book_create_dialog.dart';
 import 'creator_create_dialog.dart';
+import 'catalog_directory_panel.dart';
+import '../../filters/catalog/catalog_search_filter.dart';
+import 'category_create_dialog.dart';
 
 class AdminCatalogPanel extends StatelessWidget {
   const AdminCatalogPanel({
@@ -56,6 +59,22 @@ class AdminCatalogPanel extends StatelessWidget {
           'Name, country, and description',
           () => _creator(context, 'publishers'),
         ),
+      if (permissions.contains('book:write.one'))
+        _action(
+          context,
+          Icons.category_outlined,
+          'Add a category',
+          'Organize books by one or more genres',
+          () async {
+            final saved = await showDialog<bool>(
+              context: context,
+              builder: (_) => CategoryCreateDialog(service: service),
+            );
+            if (context.mounted && saved == true) {
+              _message(context, 'Category added.');
+            }
+          },
+        ),
       if (permissions.contains('country:sync'))
         _action(
           context,
@@ -71,6 +90,38 @@ class AdminCatalogPanel extends StatelessWidget {
             }
           },
         ),
+      const SizedBox(height: 18),
+      CatalogDirectoryPanel(
+        title: 'Authors',
+        load: (page, query) => service.catalogProfiles(
+          'authors',
+          CatalogSearchFilter(page: page, query: query),
+        ),
+        nameOf: (item) => item.name,
+        detailOf: (item) => [
+          item.country,
+          item.address,
+        ].whereType<String>().where((text) => text.isNotEmpty).join(' · '),
+      ),
+      CatalogDirectoryPanel(
+        title: 'Publishers',
+        load: (page, query) => service.catalogProfiles(
+          'publishers',
+          CatalogSearchFilter(page: page, query: query),
+        ),
+        nameOf: (item) => item.name,
+        detailOf: (item) => [
+          item.country,
+          item.address,
+        ].whereType<String>().where((text) => text.isNotEmpty).join(' · '),
+      ),
+      CatalogDirectoryPanel(
+        title: 'Categories',
+        load: (page, query) =>
+            service.categories(CatalogSearchFilter(page: page, query: query)),
+        nameOf: (item) => item.name,
+        detailOf: (item) => '',
+      ),
     ],
   );
 

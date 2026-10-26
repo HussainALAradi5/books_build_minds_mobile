@@ -21,6 +21,7 @@ class CreatorCreateDialog extends StatefulWidget {
 class _CreatorCreateDialogState extends State<CreatorCreateDialog> {
   final name = TextEditingController();
   final description = TextEditingController();
+  final address = TextEditingController();
   late final Future<List<Country>> countries;
   String? countryCode;
   bool busy = false;
@@ -29,13 +30,14 @@ class _CreatorCreateDialogState extends State<CreatorCreateDialog> {
   @override
   void initState() {
     super.initState();
-    countries = widget.service.countries().then((page) => page.items);
+    countries = widget.service.allCountries();
   }
 
   @override
   void dispose() {
     name.dispose();
     description.dispose();
+    address.dispose();
     super.dispose();
   }
 
@@ -72,6 +74,16 @@ class _CreatorCreateDialogState extends State<CreatorCreateDialog> {
                   DropdownMenuItem(value: item.code, child: Text(item.name)),
               ],
               onChanged: (value) => setState(() => countryCode = value),
+            ),
+          ),
+          const SizedBox(height: 12),
+          TextField(
+            controller: address,
+            maxLength: 500,
+            decoration: const InputDecoration(
+              labelText: 'Address (optional)',
+              isDense: true,
+              counterText: '',
             ),
           ),
           const SizedBox(height: 12),
@@ -118,6 +130,7 @@ class _CreatorCreateDialogState extends State<CreatorCreateDialog> {
         CatalogProfileRequest(
           name: name.text,
           description: description.text,
+          address: address.text,
           countryCode: countryCode?.isEmpty == true ? null : countryCode,
         ),
       );

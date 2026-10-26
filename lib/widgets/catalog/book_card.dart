@@ -68,7 +68,9 @@ class BookCard extends StatelessWidget {
       ),
       const SizedBox(height: 3),
       Text(
-        book.author,
+        book.categories.isEmpty
+            ? book.author
+            : '${book.author} · ${book.categories.first.name}',
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         style: Theme.of(context).textTheme.bodySmall,

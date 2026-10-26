@@ -6,6 +6,7 @@ import '../../services/catalog/book_service.dart';
 import '../../controllers/catalog/catalog_controller.dart';
 import '../../widgets/catalog/book_card.dart';
 import '../../widgets/catalog/catalog_filter_sheet.dart';
+import '../../widgets/catalog/top_categories_sheet.dart';
 import '../book_detail/book_detail_screen.dart';
 
 class CatalogScreen extends StatefulWidget {
@@ -113,6 +114,16 @@ class _CatalogScreenState extends State<CatalogScreen> {
                           ),
                           icon: const Icon(Icons.tune_rounded, size: 18),
                           label: const Text('Filters'),
+                        ),
+                        const SizedBox(width: 8),
+                        IconButton.outlined(
+                          tooltip: 'Top 5 by category',
+                          icon: const Icon(Icons.leaderboard_rounded),
+                          onPressed: () => showModalBottomSheet<void>(
+                            context: context,
+                            isScrollControlled: true,
+                            builder: (_) => TopCategoriesSheet(books: books!),
+                          ),
                         ),
                         const SizedBox(width: 8),
                         IconButton.filledTonal(

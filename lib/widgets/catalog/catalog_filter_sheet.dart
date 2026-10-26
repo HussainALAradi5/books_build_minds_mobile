@@ -8,6 +8,9 @@ import '../../filters/catalog/book_filter.dart';
 import 'filters/catalog_sort_controls.dart';
 import 'filters/price_range_fields.dart';
 import '../shared/modal_heading.dart';
+import '../admin/category_picker_field.dart';
+import '../admin/catalog_person_field.dart';
+import '../../models/catalog/category.dart';
 
 class CatalogFilterSheet extends StatefulWidget {
   const CatalogFilterSheet({
@@ -33,16 +36,25 @@ class _CatalogFilterSheetState extends State<CatalogFilterSheet> {
     text: widget.current.maxPrice?.toStringAsFixed(3) ?? '',
   );
   String? priceError;
-  late String publisher = widget.current.publisher;
+  late final publisher = TextEditingController(text: widget.current.publisher);
+  late List<Category> categories = widget.current.category.isEmpty
+      ? []
+      : [
+          Category(
+            id: 0,
+            name: widget.current.category,
+            slug: widget.current.category,
+          ),
+        ];
   late BookCondition? condition = widget.current.condition;
   late BookSort sort = widget.current.sort;
   late SortDirection sortDirection = widget.current.sortDirection;
-  late final Future<List<String>> publishers = widget.books.publishers();
 
   @override
   void dispose() {
     minPrice.dispose();
     maxPrice.dispose();
+    publisher.dispose();
     super.dispose();
   }
 
@@ -70,44 +82,19 @@ class _CatalogFilterSheetState extends State<CatalogFilterSheet> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 8),
-                    Text(
-                      'PUBLISHER',
-                      style: Theme.of(context).textTheme.labelMedium,
+                    CatalogPersonField(
+                      controller: publisher,
+                      label: 'Publisher',
+                      requiredSelection: false,
+                      load: (filter) =>
+                          widget.books.catalogProfiles('publishers', filter),
                     ),
-                    const SizedBox(height: 8),
-                    FutureBuilder<List<String>>(
-                      future: publishers,
-                      builder: (context, snapshot) {
-                        final names = snapshot.data ?? const <String>[];
-                        return DropdownButtonFormField<String>(
-                          key: ValueKey(publisher),
-                          initialValue: names.contains(publisher)
-                              ? publisher
-                              : '',
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.apartment_rounded),
-                          ),
-                          items: [
-                            const DropdownMenuItem(
-                              value: '',
-                              child: Text('All publishers'),
-                            ),
-                            ...names.map(
-                              (name) => DropdownMenuItem(
-                                value: name,
-                                child: Text(
-                                  name,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ),
-                          ],
-                          onChanged: snapshot.hasData
-                              ? (value) =>
-                                    setState(() => publisher = value ?? '')
-                              : null,
-                        );
-                      },
+                    const SizedBox(height: 21),
+                    CategoryPickerField(
+                      load: widget.books.categories,
+                      selected: categories,
+                      maxSelections: 1,
+                      onChanged: (value) => setState(() => categories = value),
                     ),
                     const SizedBox(height: 21),
                     Text(
@@ -168,7 +155,8 @@ class _CatalogFilterSheetState extends State<CatalogFilterSheet> {
                         TextButton.icon(
                           onPressed: () {
                             setState(() {
-                              publisher = '';
+                              publisher.clear();
+                              categories = [];
                               condition = null;
                               sort = BookSort.recent;
                               sortDirection = SortDirection.desc;
@@ -206,7 +194,10 @@ class _CatalogFilterSheetState extends State<CatalogFilterSheet> {
                               }
                               widget.onApply(
                                 widget.current.copyWith(
-                                  publisher: publisher,
+                                  publisher: publisher.text,
+                                  category: categories.isEmpty
+                                      ? ''
+                                      : categories.first.slug,
                                   condition: condition,
                                   clearCondition: condition == null,
                                   sort: sort,
